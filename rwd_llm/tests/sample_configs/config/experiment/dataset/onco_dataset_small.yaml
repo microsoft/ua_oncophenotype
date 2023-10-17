@@ -1,0 +1,7 @@
+_target_: llm_lib.data_loaders.DataframePatientDataLoader.instantiate_and_load
+dataframe_path: rwepdssa/data/llm_datasets/oncophenotype_deid/deidentified_cancer_phenotyping_notes.tsv
+text_column: text
+date_column: date
+patient_id_column: patient_id
+type_column: note_type
+note_id_column: note_id

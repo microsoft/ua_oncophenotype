@@ -1,0 +1,15 @@
+
+defaults:
+  - config/experiment/chain: n2c2_index_chain
+  - config/experiment/dataset: n2c2_test_dataset
+
+config:
+  _target_: llm_lib.experiment_config.ExperimentConfig
+  experiment:
+    _target_: llm_lib.experiment.Experiment
+    data_runner:
+      _target_: llm_lib.experiment.data_runners.DatasetRunner
+      n_threads: 1
+    evaluation:
+      _target_: llm_lib.eval.ClassificationEvaluation
+  output_dir: "experiment_output"

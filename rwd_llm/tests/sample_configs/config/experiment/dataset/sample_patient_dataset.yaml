@@ -1,0 +1,13 @@
+# This references a small sample dataset that is part of this repo.  We expect
+# data_root_dir to be set to the absolute path of the directory containing the
+# sample_data folder (llm_lib/tests). This can be something like
+# `+dataset.data_root_dir=/home/username/llm_lib/tests`.
+_target_: llm_lib.data_loaders.DataframePatientDataLoader.instantiate_and_load
+dataframe_path: sample_data/sample_notes.tsv
+text_column: text
+date_column: date
+patient_id_column: patient_id
+type_column: type
+note_id_column: note_id
+label_dataframe_path: sample_data/sample_patient_labels.tsv
+label_column: color_label

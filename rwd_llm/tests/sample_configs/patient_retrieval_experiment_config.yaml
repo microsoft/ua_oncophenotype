@@ -1,0 +1,78 @@
+# Experiment that runs patient-level retrieval (all notes) and classification on the
+# sample patient dataset
+defaults:
+  # The 'defaults' section is a langchain construct that injects external configs.  Here
+  # we inject specific 'chain' and 'dataset' components from config/experiment/chain and
+  # config/experiment/dataset subdirectories.
+  #
+  # Select the dataset and add it as the 'dataset' key at the root level of the config.
+  # This is added to config/resources via interpolation (${...} syntax) so it will be
+  # instantiated once but can be referenced multiple locations in the config.  In this
+  # case it's referenced by config/experiment/dataset and within the
+  # patient_retrieval_chain
+  - config/experiment/dataset@dataset: sample_patient_dataset
+  # Select the chain to run.  Without the '@' syntax used with dataset above, it is
+  # injected at the location corresponding to the directory structure, here
+  # config/experiment/chain.
+  - config/experiment/chain: patient_retrieval_chain
+
+#
+# Some options for the experiment.  This just allows us to specify the OpenAI model, and
+# whether we are using Azure OpenAI service or the standard OpenAI service.
+#
+
+# model_name: "gpt-4"
+# deployment_name: ${model_name}
+model_name: gpt-3.5-turbo
+deployment_name: gpt-35-turbo
+
+azure_openai:
+  class:
+    _target_: "hydra.utils.get_class"
+    path: "langchain.chat_models.AzureChatOpenAI"
+  extra_args:
+    deployment_name: ${deployment_name}
+    model_name: ${model_name}
+
+openai:
+  class:
+    _target_: "hydra.utils.get_class"
+    path: "langchain.chat_models.ChatOpenAI"
+  extra_args:
+    model_name: ${model_name}
+
+# choose the llm to use
+llm: ${azure_openai}
+
+#
+# the actual config
+#
+config:
+  _target_: llm_lib.experiment_config.ExperimentConfig
+  # Named resources that will be instantiated once and referenced elsewhere in the
+  # config via the ComponentRegistry.  These will be instantiated in the order they are
+  # listed here (to support dependencies between resources).
+  resources: 
+    - "dataset": ${dataset}
+  experiment:
+    _target_: llm_lib.experiment.Experiment
+    dataset:
+      # dataset is referenced through the 'resources'
+      _target_: llm_lib.experiment.ComponentRegistry.get
+      name: "dataset"
+    chain:
+      # The contents of /config/experiment/chain is specified in the defaults list,
+      # everything here is just override some values from that config
+      classifier:
+        _target_: llm_lib.chains.ChatEvidenceChain.from_openai_llm
+        llm_class: ${llm.class}
+        llm_extra_args: ${llm.extra_args}
+        question: "What is the patient's favorite color?"
+        answer_mapping: ["red", "yellow", "blue", "purple", "white", "black", "Unsure"]
+        examples: []
+    data_runner:
+      _target_: llm_lib.experiment.data_runners.DatasetRunner
+      n_threads: 1
+    evaluation:
+      _target_: llm_lib.eval.ClassificationEvaluation
+  output_dir: "experiment_output"

@@ -1,0 +1,14 @@
+name: llm_env
+dependencies:
+  - python=3.9
+  - pip
+  - wheel
+  - pip:
+    - chromadb==0.3.21
+    - hydra-core==1.3.2
+    - langchain==0.0.272
+    - num2words==0.5.12
+    - openai==0.27.4
+    - tiktoken==0.3.3
+    - pandas
+    - sklearn

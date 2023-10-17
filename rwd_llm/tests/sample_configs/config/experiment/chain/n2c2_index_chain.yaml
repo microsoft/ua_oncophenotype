@@ -1,0 +1,32 @@
+defaults:
+  # - index: build_index
+  - index: load_index
+
+_target_: "llm_lib.chains.IndexChain.from_openai_llm"
+preamble: >
+  You are an AI assistant trained to answer questions based on source documents.
+question: "Does this patient experience abdominal pain?"
+llm_class: 
+  _target_: "hydra.utils.get_class"
+  path: "langchain.chat_models.AzureChatOpenAI"
+query: "abdominal or stomach"
+search_mode: "similarity"
+k: 3
+# input from Patient object is the "id" key, this gets mapped to "patient_id" in the
+# index
+filter_by: {"id": "patient_id"}
+llm_extra_args: 
+  model_name: "gpt-3.5-turbo"
+  deployment_name: "gpt-35-turbo"
+answer_options: ["met", "not met", "unsure"]
+chat_model: true
+n: 1
+examples: 
+  - _target_: "llm_lib.chains.evidence_chain_prompts.EvidenceChainExample"
+    text: "The patient arrived at the hospital complaining of abdominal pain. "
+    answer: "met"
+    evidence: "complaining of abdominal pain"
+  - _target_: "llm_lib.chains.evidence_chain_prompts.EvidenceChainExample"
+    text: "The patient drinks too much alcohol. Her intake paperwork\n indicates that she likes the color purple. She was released after\n observation"
+    answer: "not met"
+    evidence: ""
