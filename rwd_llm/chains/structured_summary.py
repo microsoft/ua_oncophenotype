@@ -9,7 +9,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain.schema import BaseMemory, Document
-from llm_lib.output_parsers.pydantic_parser_with_examples import (
+from rwd_llm.output_parsers.pydantic_parser_with_examples import (
     PydanticOutputParserWithExamples,
 )
 

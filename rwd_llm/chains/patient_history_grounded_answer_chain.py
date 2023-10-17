@@ -7,7 +7,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain.pydantic_v1 import BaseModel, Field, validator
 from langchain.schema import BaseMemory, Document
-from llm_lib.output_parsers import PydanticOutputParserWithExamples
+from rwd_llm.output_parsers import PydanticOutputParserWithExamples
 
 from .categorical_chain import normalize_label_mapping, parse_output
 from .evidence_chain import find_evidence

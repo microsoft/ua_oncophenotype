@@ -2,7 +2,7 @@ import os
 from typing import Dict, List, Optional
 
 import pandas as pd
-from llm_lib.dtypes.dtypes import ClinicalNote, Label, Patient
+from rwd_llm.dtypes.dtypes import ClinicalNote, Label, Patient
 
 from .data_loaders_base import DataLoaderBase, DatasetBase
 

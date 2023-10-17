@@ -1,5 +1,5 @@
 from langchain.pydantic_v1 import BaseModel
-from llm_lib.output_parsers import PydanticOutputParserWithExamples
+from rwd_llm.output_parsers import PydanticOutputParserWithExamples
 
 from ..question_with_structured_output import chat_prompt_with_structured_output
 

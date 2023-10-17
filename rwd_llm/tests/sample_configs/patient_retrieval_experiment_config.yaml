@@ -48,31 +48,31 @@ llm: ${azure_openai}
 # the actual config
 #
 config:
-  _target_: llm_lib.experiment_config.ExperimentConfig
+  _target_: rwd_llm.experiment_config.ExperimentConfig
   # Named resources that will be instantiated once and referenced elsewhere in the
   # config via the ComponentRegistry.  These will be instantiated in the order they are
   # listed here (to support dependencies between resources).
   resources: 
     - "dataset": ${dataset}
   experiment:
-    _target_: llm_lib.experiment.Experiment
+    _target_: rwd_llm.experiment.Experiment
     dataset:
       # dataset is referenced through the 'resources'
-      _target_: llm_lib.experiment.ComponentRegistry.get
+      _target_: rwd_llm.experiment.ComponentRegistry.get
       name: "dataset"
     chain:
       # The contents of /config/experiment/chain is specified in the defaults list,
       # everything here is just override some values from that config
       classifier:
-        _target_: llm_lib.chains.ChatEvidenceChain.from_openai_llm
+        _target_: rwd_llm.chains.ChatEvidenceChain.from_openai_llm
         llm_class: ${llm.class}
         llm_extra_args: ${llm.extra_args}
         question: "What is the patient's favorite color?"
         answer_mapping: ["red", "yellow", "blue", "purple", "white", "black", "Unsure"]
         examples: []
     data_runner:
-      _target_: llm_lib.experiment.data_runners.DatasetRunner
+      _target_: rwd_llm.experiment.data_runners.DatasetRunner
       n_threads: 1
     evaluation:
-      _target_: llm_lib.eval.ClassificationEvaluation
+      _target_: rwd_llm.eval.ClassificationEvaluation
   output_dir: "experiment_output"

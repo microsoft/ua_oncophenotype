@@ -1,7 +1,7 @@
 import os
 
 import pytest
-from llm_lib.llms import setup_openai_from_dotenv
+from rwd_llm.llms import setup_openai_from_dotenv
 
 from ..index_wrapper import IndexWrapper
 

@@ -1,4 +1,4 @@
-from llm_lib.tests.utils import FakeLLM
+from rwd_llm.tests.utils import FakeLLM
 
 from ..categorical_chain import CategoricalChain, normalize_label_mapping, parse_output
 from ..chain_utils import get_prompt_template

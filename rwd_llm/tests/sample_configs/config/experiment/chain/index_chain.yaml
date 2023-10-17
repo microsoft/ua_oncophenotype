@@ -4,7 +4,7 @@ defaults:
   # - index: build_index
   - index: load_index
 
-_target_: "llm_lib.chains.IndexChain.from_openai_llm"
+_target_: "rwd_llm.chains.IndexChain.from_openai_llm"
 preamble: >
   You are an AI assistant trained to answer questions based on source documents.
 question: "alcohol abuse is defined as: Recent alcohol abuse history which is an active problem at the time of admission, whether it is the primary cause of admission or not.\n Does this patient have history of alcohol abuse?"
@@ -24,11 +24,11 @@ answer_options: {"yes": 1, "no": 0, "unsure": 0.5}
 chat_model: true
 n: 1
 examples: 
-  - _target_: "llm_lib.chains.evidence_chain_prompts.EvidenceChainExample"
+  - _target_: "rwd_llm.chains.evidence_chain_prompts.EvidenceChainExample"
     text: "The patient arrived at the hospital complaining of chest pain. The\n patient loves the color blue.  She was released after observation"
     answer: "no"
     evidence: ""
-  - _target_: "llm_lib.chains.evidence_chain_prompts.EvidenceChainExample"
+  - _target_: "rwd_llm.chains.evidence_chain_prompts.EvidenceChainExample"
     text: "The patient drinks too much alcohol. Her intake paperwork\n indicates that she likes the color purple. She was released after\n observation"
     answer: "yes"
     evidence: "The patient drinks too much alcohol."

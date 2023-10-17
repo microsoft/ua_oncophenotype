@@ -7,7 +7,7 @@ from langchain.chains.loading import type_to_loader_dict
 from langchain.llms.loading import load_llm, load_llm_from_config
 from langchain.prompts.loading import load_prompt, load_prompt_from_config
 from langchain.schema import Generation
-from llm_lib.chains.categorical_chain import CategoricalChain
+from rwd_llm.chains.categorical_chain import CategoricalChain
 
 logger = logging.getLogger(__name__)
 

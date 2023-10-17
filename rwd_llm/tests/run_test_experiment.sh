@@ -22,7 +22,7 @@ TESTS_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 DATA_DIR=$TESTS_DIR
 # DATA_DIR=$DATA_ROOT_DIR
 
-python -m llm_lib.run_experiment \
+python -m rwd_llm.run_experiment \
     -cp tests/sample_configs \
     -cn $EXPERIMENT \
     +dataset.data_root_dir=$DATA_DIR \

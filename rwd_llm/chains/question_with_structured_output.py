@@ -7,8 +7,8 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
 )
 from langchain.schema.messages import AIMessage
-from llm_lib.utils import get_prompt_from_message
-from llm_lib.utils.prompt_utils import validate_prompt_inputs
+from rwd_llm.utils import get_prompt_from_message
+from rwd_llm.utils.prompt_utils import validate_prompt_inputs
 
 
 def chat_prompt_with_structured_output(

@@ -1,11 +1,11 @@
 import os
 
-from llm_lib.chains.mapping_chain import MappingChain
-from llm_lib.data_loaders import (
+from rwd_llm.chains.mapping_chain import MappingChain
+from rwd_llm.data_loaders import (
     DataframeClinicalNoteDataLoader,
     DataframePatientDataLoader,
 )
-from llm_lib.eval import ClassificationEvaluation
+from rwd_llm.eval import ClassificationEvaluation
 
 from .. import DatasetRunner, Experiment
 

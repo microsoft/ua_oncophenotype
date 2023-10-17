@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from llm_lib.dtypes import ClinicalNote, Label, Patient
+from rwd_llm.dtypes import ClinicalNote, Label, Patient
 
 from ..data_loaders_base import DatasetBase
 

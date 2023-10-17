@@ -5,9 +5,9 @@ import pandas as pd
 from langchain.embeddings import OpenAIEmbeddings  # no azure specific library
 from langchain.embeddings.base import Embeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from llm_lib.data_loaders.data_loaders_base import DatasetBase
-from llm_lib.dtypes.dtypes import BaseObject, ClinicalNote, Patient
 from openai.error import RateLimitError
+from rwd_llm.data_loaders.data_loaders_base import DatasetBase
+from rwd_llm.dtypes.dtypes import BaseObject, ClinicalNote, Patient
 from tenacity import retry
 from tenacity.retry import retry_if_exception_type
 from tenacity.stop import stop_after_attempt

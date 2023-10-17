@@ -1,5 +1,5 @@
-from llm_lib.dtypes import ClinicalNote
-from llm_lib.tests.utils import FakeLLM
+from rwd_llm.dtypes import ClinicalNote
+from rwd_llm.tests.utils import FakeLLM
 
 from ..patient_history_grounded_answer_chain import (
     ParsedPatientHistoryEvidence,

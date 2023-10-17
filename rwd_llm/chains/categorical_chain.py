@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains import LLMChain
 from langchain.pydantic_v1 import Field, validator
-from llm_lib.chains.chain_utils import ERROR_LABEL
+from rwd_llm.chains.chain_utils import ERROR_LABEL
 
 logger = logging.getLogger(__name__)
 

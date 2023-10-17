@@ -32,28 +32,28 @@ llm: ${azure_openai}
 
 # the actual config
 config:
-  _target_: llm_lib.experiment_config.ExperimentConfig
+  _target_: rwd_llm.experiment_config.ExperimentConfig
   resources: 
     - "dataset": ${dataset}
   experiment:
-    _target_: llm_lib.experiment.Experiment
+    _target_: rwd_llm.experiment.Experiment
     dataset:
-      _target_: llm_lib.experiment.ComponentRegistry.get
+      _target_: rwd_llm.experiment.ComponentRegistry.get
       name: "dataset"
     chain:
       note_types:
         - PathologyReport
       classifier:
         # override some values from the chain specified in defults
-        _target_: llm_lib.chains.ChatEvidenceChain.from_openai_llm
+        _target_: rwd_llm.chains.ChatEvidenceChain.from_openai_llm
         llm_class: ${llm.class}
         llm_extra_args: ${llm.extra_args}
         question: "What is the primary tumor site?"
         answer_mapping: ["Lung", "Breast", "Pancreas", "Prostate", "Unsure"]
         examples: []
     data_runner:
-      _target_: llm_lib.experiment.data_runners.DatasetRunner
+      _target_: rwd_llm.experiment.data_runners.DatasetRunner
       n_threads: 1
     evaluation:
-      _target_: llm_lib.eval.ClassificationEvaluation
+      _target_: rwd_llm.eval.ClassificationEvaluation
   output_dir: "experiment_output"

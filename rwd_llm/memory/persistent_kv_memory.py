@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 
 from langchain.pydantic_v1 import BaseModel
-from llm_lib.data_loaders.data_loaders_base import DatasetBase
-from llm_lib.dtypes.dtypes_utils import force_to_json
+from rwd_llm.data_loaders.data_loaders_base import DatasetBase
+from rwd_llm.dtypes.dtypes_utils import force_to_json
 
 logger = logging.getLogger(__name__)
 

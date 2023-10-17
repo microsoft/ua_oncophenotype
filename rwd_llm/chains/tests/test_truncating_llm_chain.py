@@ -6,9 +6,9 @@ import tiktoken
 from langchain.chains import LLMChain
 from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
-from llm_lib.dtypes.dtypes import ClinicalNote
-from llm_lib.retrieval.retrieval_utils import build_and_get_index
-from llm_lib.tests.utils import FakeLLM
+from rwd_llm.dtypes.dtypes import ClinicalNote
+from rwd_llm.retrieval.retrieval_utils import build_and_get_index
+from rwd_llm.tests.utils import FakeLLM
 
 from ..truncating_llm_chain import OPENAI_MODEL_TOKEN_MAPPING, TruncatingLLMChain
 

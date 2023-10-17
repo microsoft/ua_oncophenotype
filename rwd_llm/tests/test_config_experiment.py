@@ -4,9 +4,9 @@ from hydra import compose, initialize_config_dir
 from hydra.core.global_hydra import GlobalHydra
 from hydra.utils import instantiate
 from langchain.chains.base import Chain
-from llm_lib.data_loaders import DatasetBase
-from llm_lib.experiment import Experiment
-from llm_lib.experiment_config import ExperimentConfig
+from rwd_llm.data_loaders import DatasetBase
+from rwd_llm.experiment import Experiment
+from rwd_llm.experiment_config import ExperimentConfig
 
 CUR_DIR = os.path.dirname(__file__)
 

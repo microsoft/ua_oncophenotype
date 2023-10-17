@@ -1,7 +1,7 @@
 import logging
 from typing import Any, Dict
 
-from llm_lib.chains.chain_utils import ERROR_LABEL
+from rwd_llm.chains.chain_utils import ERROR_LABEL
 from sklearn.metrics import classification_report
 
 from ..data_loaders import DatasetBase

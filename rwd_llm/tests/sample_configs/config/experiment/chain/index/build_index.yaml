@@ -1,4 +1,4 @@
-_target_: "llm_lib.retrieval.retrieval_utils.build_and_get_index"
+_target_: "rwd_llm.retrieval.retrieval_utils.build_and_get_index"
 # dataset key needs to be set in containing config
 dataset: ${config.experiment.dataset}
 embedding_model_name: "text-embedding-ada-002"

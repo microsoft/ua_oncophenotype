@@ -7,8 +7,8 @@ import tqdm
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains.base import Chain
 from langchain.schema import BaseMemory
-from llm_lib.data_loaders import DatasetBase
-from llm_lib.dtypes.dtypes import BaseObject
+from rwd_llm.data_loaders import DatasetBase
+from rwd_llm.dtypes.dtypes import BaseObject
 
 logger = logging.getLogger(__name__)
 

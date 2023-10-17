@@ -4,7 +4,7 @@ from typing import List
 from uuid import UUID
 
 from langchain.pydantic_v1 import BaseModel
-from llm_lib.dtypes.dtypes import BaseObject, ClinicalNote
+from rwd_llm.dtypes.dtypes import BaseObject, ClinicalNote
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class NoteCombiner:
 
 def force_to_json(json_ob):
     """
-    Make sure json_ob is json-serializable, including llm_lib BaseObject subclasses. If
+    Make sure json_ob is json-serializable, including rwd_llm BaseObject subclasses. If
     something can't be serialized as json, just fall back to representing it as a 'repr'
     string.
     """

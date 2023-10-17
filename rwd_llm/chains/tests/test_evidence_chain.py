@@ -1,6 +1,6 @@
 import textwrap
 
-from llm_lib.tests.utils import FakeLLM
+from rwd_llm.tests.utils import FakeLLM
 
 from ..evidence_chain import Evidence, EvidenceChain, find_evidence
 

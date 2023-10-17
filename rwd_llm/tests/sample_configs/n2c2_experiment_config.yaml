@@ -4,12 +4,12 @@ defaults:
   - config/experiment/dataset: n2c2_test_dataset
 
 config:
-  _target_: llm_lib.experiment_config.ExperimentConfig
+  _target_: rwd_llm.experiment_config.ExperimentConfig
   experiment:
-    _target_: llm_lib.experiment.Experiment
+    _target_: rwd_llm.experiment.Experiment
     data_runner:
-      _target_: llm_lib.experiment.data_runners.DatasetRunner
+      _target_: rwd_llm.experiment.data_runners.DatasetRunner
       n_threads: 1
     evaluation:
-      _target_: llm_lib.eval.ClassificationEvaluation
+      _target_: rwd_llm.eval.ClassificationEvaluation
   output_dir: "experiment_output"

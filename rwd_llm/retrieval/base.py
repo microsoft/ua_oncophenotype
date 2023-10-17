@@ -1,8 +1,8 @@
 import collections
 from typing import Dict, List, Optional, Union, cast
 
-from llm_lib.data_loaders.data_loaders_base import DatasetBase
-from llm_lib.dtypes import ClinicalNote
+from rwd_llm.data_loaders.data_loaders_base import DatasetBase
+from rwd_llm.dtypes import ClinicalNote
 
 
 class NoteRetrievalBase:

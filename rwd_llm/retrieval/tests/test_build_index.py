@@ -1,8 +1,8 @@
 import pandas as pd
 import pytest
-from llm_lib.data_loaders.data_loaders_base import DatasetBase
-from llm_lib.dtypes.dtypes import ClinicalNote
-from llm_lib.llms import setup_openai_from_dotenv
+from rwd_llm.data_loaders.data_loaders_base import DatasetBase
+from rwd_llm.dtypes.dtypes import ClinicalNote
+from rwd_llm.llms import setup_openai_from_dotenv
 
 from ..build_index import BuildIndex
 

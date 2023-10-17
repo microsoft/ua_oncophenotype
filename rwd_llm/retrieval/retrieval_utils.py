@@ -1,6 +1,6 @@
 import os
 
-from llm_lib.data_loaders.data_loaders_base import DatasetBase
+from rwd_llm.data_loaders.data_loaders_base import DatasetBase
 
 from .build_index import BuildIndex
 from .chroma import Chroma

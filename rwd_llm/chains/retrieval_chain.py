@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional
 
 from langchain.chains.base import Chain
 from langchain.schema import Document
-from llm_lib.dtypes import ClinicalNote, NoteFormatterBase
+from rwd_llm.dtypes import ClinicalNote, NoteFormatterBase
 
 from ..retrieval import NoteRetrievalBase
 

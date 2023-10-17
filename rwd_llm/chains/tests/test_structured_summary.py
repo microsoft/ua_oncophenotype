@@ -1,8 +1,8 @@
 import textwrap
 
 from langchain.schema import Document
-from llm_lib.dtypes import ClinicalNote
-from llm_lib.tests.utils import FakeLLM
+from rwd_llm.dtypes import ClinicalNote
+from rwd_llm.tests.utils import FakeLLM
 
 from ..retrieval_chain import note_to_document
 from ..structured_summary import (

@@ -5,43 +5,43 @@
 # here, they could be imported from external configs via the defaults list.
 
 legs_chain:
-  _target_: llm_lib.chains.NoOpChain
+  _target_: rwd_llm.chains.NoOpChain
   the_key: "legs"
 
 has_hooves_chain:
-  _target_: llm_lib.chains.NoOpChain
+  _target_: rwd_llm.chains.NoOpChain
   the_key: "has_hooves"
 
 breathes_air_chain:
-  _target_: llm_lib.chains.MappingChain
+  _target_: rwd_llm.chains.MappingChain
   input_key: "breathes_air"
   mapping:
     "No": "Fish"
     "Yes": "Snake"
 
 can_fly_chain:
-  _target_: llm_lib.chains.MappingChain
+  _target_: rwd_llm.chains.MappingChain
   input_key: "can_fly"
   mapping:
     "No": "Human"
     "Yes": "Bird"
 
 makes_honey_chain:
-  _target_: llm_lib.chains.MappingChain
+  _target_: rwd_llm.chains.MappingChain
   input_key: "makes_honey"
   mapping:
     "No": "Ant"
     "Yes": "Bee"
 
 climbs_trees_chain:
-  _target_: llm_lib.chains.MappingChain
+  _target_: rwd_llm.chains.MappingChain
   input_key: "climbs_trees"
   mapping:
     "No": "Dog"
     "Yes": "Cat"
 
 tastes_good_chain:
-  _target_: llm_lib.chains.MappingChain
+  _target_: rwd_llm.chains.MappingChain
   input_key: "tastes_good"
   mapping:
     "No": "Horse"
@@ -50,7 +50,7 @@ tastes_good_chain:
 # This defines the graph, where non-leaf ChainNodes have children that map responses to
 # the name of the next node.
 chain_nodes:
-  - _target_: llm_lib.chains.categorical_routing_chain.ChainNode
+  - _target_: rwd_llm.chains.categorical_routing_chain.ChainNode
     chain: ${legs_chain}
     name: "legs"
     children:
@@ -58,25 +58,25 @@ chain_nodes:
       "2": "can_fly"
       "4": "has_hooves"
       "6": "makes_honey"
-  - _target_: llm_lib.chains.categorical_routing_chain.ChainNode
+  - _target_: rwd_llm.chains.categorical_routing_chain.ChainNode
     chain: ${has_hooves_chain}
     name: "has_hooves"
     children:
       "No": "climbs_trees"
       "Yes": "tastes_good"
-  - _target_: llm_lib.chains.categorical_routing_chain.ChainNode
+  - _target_: rwd_llm.chains.categorical_routing_chain.ChainNode
     chain: ${breathes_air_chain}
     name: "breathes_air"
-  - _target_: llm_lib.chains.categorical_routing_chain.ChainNode
+  - _target_: rwd_llm.chains.categorical_routing_chain.ChainNode
     chain: ${can_fly_chain}
     name: "can_fly"
-  - _target_: llm_lib.chains.categorical_routing_chain.ChainNode
+  - _target_: rwd_llm.chains.categorical_routing_chain.ChainNode
     chain: ${makes_honey_chain}
     name: "makes_honey"
-  - _target_: llm_lib.chains.categorical_routing_chain.ChainNode
+  - _target_: rwd_llm.chains.categorical_routing_chain.ChainNode
     chain: ${climbs_trees_chain}
     name: "climbs_trees"
-  - _target_: llm_lib.chains.categorical_routing_chain.ChainNode
+  - _target_: rwd_llm.chains.categorical_routing_chain.ChainNode
     chain: ${tastes_good_chain}
     name: "tastes_good"
 
@@ -93,7 +93,7 @@ input_keys:
 
 # The full CategoricalRoutingChain. hydra 'initialize' will be called on this key.
 chain:
-  _target_: llm_lib.chains.categorical_routing_chain.CategoricalRoutingChain.from_node_list
+  _target_: rwd_llm.chains.categorical_routing_chain.CategoricalRoutingChain.from_node_list
   node_list: ${chain_nodes}
   input_keys: ${input_keys}
   output_keys:

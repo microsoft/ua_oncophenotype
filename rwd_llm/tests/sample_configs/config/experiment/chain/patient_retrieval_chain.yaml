@@ -5,17 +5,17 @@ defaults:
   # config.
   - /config/experiment/chain@classifier: evidence_chain
 
-_target_: llm_lib.chains.RetrievalAndClassificationChain
+_target_: rwd_llm.chains.RetrievalAndClassificationChain
 retriever:
-  _target_: llm_lib.retrieval.NoteRetrievalSimple
+  _target_: rwd_llm.retrieval.NoteRetrievalSimple
   dataset:
     # assume that the component registry has been populated with a 'dataset'
-    _target_: llm_lib.experiment.ComponentRegistry.get
+    _target_: rwd_llm.experiment.ComponentRegistry.get
     name: "dataset"
 note_types:
   # This is the fake 'note type' for the sample dataset. In reality could be something
   # like ImagingReport.
   - note
 note_formatter:
-  _target_: llm_lib.dtypes.BasicNoteFormatter
+  _target_: rwd_llm.dtypes.BasicNoteFormatter
   

@@ -9,11 +9,11 @@ def read(fname):
 
 
 setup(
-    name="llm_lib",
+    name="rwd_llm",
     version=read("../version.txt"),
     author="Sid Kiblawi, Sam Preston, Robert Tinn",
     author_email=(
-        "sidkiblawi@microsoft.com,sam.preston@microsoft.com,robert.tinn@microsoft.com"
+        "sidkiblawi@microsoft.com,sam.preston@microsoft.com"
     ),
     description="LLM utilities for clinical NLP applications",
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*"]),

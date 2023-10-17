@@ -1,4 +1,5 @@
-name: llm_env
+# conda env create -f rwd_llm_env.yml
+name: rwd_llm_env
 dependencies:
   - python=3.9
   - pip
@@ -11,4 +12,4 @@ dependencies:
     - openai==0.27.4
     - tiktoken==0.3.3
     - pandas
-    - sklearn
+    - scikit-learn

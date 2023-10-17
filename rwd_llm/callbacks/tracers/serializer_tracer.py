@@ -5,7 +5,7 @@ from typing import Optional
 
 from langchain.callbacks.tracers.base import BaseTracer
 from langchain.callbacks.tracers.schemas import Run
-from llm_lib.dtypes import force_to_json
+from rwd_llm.dtypes import force_to_json
 
 logger = logging.getLogger(__name__)
 
