@@ -1,0 +1,6 @@
+flake8==6.0.*
+pylint==2.17.*
+isort==5.12.*
+black==23.3.*
+pytest==7.3.*
+autoflake==2.1.*

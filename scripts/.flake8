@@ -1,0 +1,12 @@
+[flake8]
+# ignore errors/warnings introduced by black formatting
+# E203 has to do with space before :
+# W503 is a line break before binary operator
+# ignore complexity errors
+# C901 is code complexity
+ignore = E203,W503,C901,E741
+max-line-length = 88
+exclude = test_*
+# As an alternative to disabling complexity errors we could increase
+# the max complexity (default is 10)
+# max-complexity = 10
