@@ -10,11 +10,9 @@ def read(fname):
 
 setup(
     name="rwd_llm",
-    version=read("../version.txt"),
+    version="0.0.1",
     author="Sid Kiblawi, Sam Preston, Robert Tinn",
-    author_email=(
-        "sidkiblawi@microsoft.com,sam.preston@microsoft.com"
-    ),
+    author_email="sidkiblawi@microsoft.com,sam.preston@microsoft.com",
     description="LLM utilities for clinical NLP applications",
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*"]),
     install_requires=[
@@ -23,6 +21,8 @@ setup(
         "langchain==0.0.272",
         "openai>=0.27",
         "tiktoken>0.3",
+        "haikunator>=2.1",
+        "mlflow>=2.6",
         "pandas",
         "scikit-learn",
     ],
