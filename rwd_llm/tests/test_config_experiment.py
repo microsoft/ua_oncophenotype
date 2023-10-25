@@ -14,8 +14,9 @@ CUR_DIR = os.path.dirname(__file__)
 def test_config_experiment():
     """This just tests that the config can be loaded and the experiment instantiated."""
 
-    # need to set OPENAI_API_KEY to something, otherwise it will fail
+    # need to set OPENAI_API_KEY and OPENAI_API_VERSION to something, otherwise it will fail
     os.environ["OPENAI_API_KEY"] = "fake"
+    os.environ["OPENAI_API_VERSION"] = "fake"
 
     initialize_config_dir(
         config_dir=f"{CUR_DIR}/sample_configs",
