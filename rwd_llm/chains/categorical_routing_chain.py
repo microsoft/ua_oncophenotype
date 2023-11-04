@@ -154,6 +154,41 @@ class CategoricalRoutingChain(Chain):
         """Expect output keys"""
         return self.return_keys
 
+    def _prep_inputs(
+        self,
+        chain_node: ChainNode,
+        item_id: str,
+        inputs: Dict[str, Any],
+        orig_inputs: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Get expected inputs either from current inputs (from previous node), from
+        original chain inputs, or from memory"""
+        prepped_inputs: Dict[str, Any] = {}
+        for key in chain_node.chain.input_keys:
+            if key in inputs:
+                prepped_inputs[key] = inputs[key]
+            elif key in self.persistent_memory_provider.keys(item_id=item_id):
+                logger.debug(
+                    f"getting missing input key {key} for chain"
+                    f" {chain_node.name} from memory provider"
+                )
+                prepped_inputs[key] = self.persistent_memory_provider.get_memory(
+                    item_id=item_id, key=key
+                )
+            elif key in orig_inputs:
+                logger.debug(
+                    f"getting missing input key {key} for chain"
+                    f" {chain_node.name} from original inputs"
+                )
+                prepped_inputs[key] = orig_inputs[key]
+            else:
+                # it's ok, we may get this input from the chain's memory
+                logger.debug(
+                    f"Missing input key {key} for chain"
+                    " not found, hopefully we'll get it from the chain's memory"
+                )
+        return prepped_inputs
+
     def _call(
         self,
         inputs: Dict[str, Any],
@@ -178,43 +213,28 @@ class CategoricalRoutingChain(Chain):
         logger.debug(f"will memorize keys: {keys_to_memorize}")
         inputs = {}
         while True:
-            # if we're missing any keys, try to get them from the original inputs or
-            # from memory provider
-            for key in cur_node.chain.input_keys:
-                if key not in inputs:
-                    logger.debug(
-                        f"getting missing input key {key} for chain {cur_node.name}"
-                    )
-                    if key in self.persistent_memory_provider.keys(item_id=item_id):
-                        logger.debug(
-                            f"getting missing input key {key} for chain"
-                            f" {cur_node.name} from memory provider"
-                        )
-                        inputs[key] = self.persistent_memory_provider.get_memory(
-                            item_id=item_id, key=key
-                        )
-                    elif key in orig_inputs:
-                        logger.debug(
-                            f"getting missing input key {key} for chain"
-                            f" {cur_node.name} from original inputs"
-                        )
-                        inputs[key] = orig_inputs[key]
-                    else:
-                        # it's ok, we may get this input from the chain's memory
-                        logger.debug(
-                            f"Missing input key {key} for chain"
-                            " not found, hopefully we'll get it from the chain's memory"
-                        )
-            logger.info(f"Running chain node {cur_node.name}")
-            callbacks = _run_manager.get_child()
-            outputs = cur_node.chain(
-                inputs, callbacks=callbacks, return_only_outputs=True
-            )
             # logger.debug(f"Outputs of chain node {cur_node.name}: {outputs}")
             # memorize outputs that match output keys
-            to_save = {
-                key: val for key, val in outputs.items() if key in keys_to_memorize
+            keys_to_save = {
+                key for key in cur_node.chain.output_keys if key in keys_to_memorize
             }
+            try:
+                chain_inputs = self._prep_inputs(
+                    cur_node, item_id=item_id, inputs=inputs, orig_inputs=orig_inputs
+                )
+                logger.info(f"Running chain node {cur_node.name}")
+                callbacks = _run_manager.get_child()
+                outputs = cur_node.chain(
+                    chain_inputs, callbacks=callbacks, return_only_outputs=True
+                )
+            except Exception as e:
+                self.persistent_memory_provider.log_error(
+                    item_id=item_id, chain_name=cur_node.name, error=e
+                )
+                raise e
+            # logger.debug(f"Outputs of chain node {cur_node.name}: {outputs}")
+            # memorize outputs that match output keys
+            to_save = {key: outputs[key] for key in keys_to_save}
             # print(f"  chain output keys: {outputs.keys()}")
             # print(f"  keys to memorize: {keys_to_memorize}")
             # print(f"Saving keys {to_save.keys()}")
