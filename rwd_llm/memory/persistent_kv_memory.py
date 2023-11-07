@@ -72,6 +72,10 @@ class PersistentMemoryProviderBase:
         memories."""
         raise NotImplementedError
 
+    def log_error(self, item_id: str, key: str, err: Exception) -> None:
+        """Log an error creating a specific memory"""
+        logger.warning(f"Error creating memory {item_id}:{key}: {err}")
+
     def _get_serializer(self, key: str) -> SerializerType:
         return self.custom_serializers.get(key, self.default_serializer)
 
@@ -270,6 +274,19 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
         with open(key_file, "w") as fp:
             json.dump(mem_val.dict(), fp)
 
+    def _write_error(self, item_id: str, key: str, err_msg: str) -> None:
+        # we use the SerializedMemoryValue class, but we just use the string directly
+        # (we don't actually 'serialize' it)
+        err_val = SerializedMemoryValue(
+            item_id=item_id, source_run=self.run_id, key=key, value=err_msg
+        )
+        item_err_dir = self.persistence_dir / "errors" / item_id
+        if not item_err_dir.exists():
+            item_err_dir.mkdir()
+        err_file = item_err_dir / f"{key}.json"
+        with open(err_file, "w") as fp:
+            json.dump(err_val.dict(), fp)
+
     def add_memory(self, item_id: str, key: str, val: Any) -> None:
         """Add a memory to the persistent store."""
         self._add_to_cache(item_id, key, val)
@@ -279,6 +296,10 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
         """Add multiple memories to the persistent store."""
         for memory_key, memory_val in memories.items():
             self.add_memory(item_id, memory_key, memory_val)
+
+    def log_error(self, item_id: str, key: str, err: Exception) -> None:
+        super().log_error(item_id, key, err)
+        self._write_error(item_id, key, repr(err))
 
     def get_memory(self, item_id: str, key: str) -> Any:
         """Get a memory from the persistent store."""
