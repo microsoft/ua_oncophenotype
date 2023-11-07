@@ -4,21 +4,13 @@ from typing import Union
 
 import hydra
 import hydra.core
-from haikunator import Haikunator
-from hydra.utils import instantiate
-from omegaconf import DictConfig, ListConfig, OmegaConf
+from omegaconf import DictConfig, ListConfig
 
 from .utils import get_by_path
+from rwd_llm.experiment_config import parse_config
 
 INDENT_SIZE = 2
 INDENT = " " * INDENT_SIZE
-
-
-def haikunate(token_length: int = 4, delimiter: str = "-") -> str:
-    return Haikunator().haikunate(token_length=token_length, delimiter=delimiter)
-
-
-OmegaConf.register_new_resolver("haikunate", haikunate, use_cache=True)
 
 
 def print_cfg(cfg: Union[DictConfig, ListConfig], indent: int = 0):
@@ -67,11 +59,7 @@ def my_app(cfg: DictConfig) -> None:
         return
 
     # config can either bet at the top level or nested under "config"
-    if "config" in cfg:
-        cfg = cfg.config
-
-    config = instantiate(cfg, _recursive_=False)
-    config.parse_config()
+    config = parse_config(cfg)
     config.run()
 
 

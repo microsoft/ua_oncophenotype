@@ -4,7 +4,9 @@ import shutil
 from dataclasses import dataclass, field
 from typing import Callable, Dict, List, Optional
 
+from haikunator import Haikunator
 from hydra.utils import instantiate
+from omegaconf import DictConfig, OmegaConf
 
 from ..experiment import Experiment
 from ..llms.llm_utils import OpenAIConfig, setup_openai_from_dotenv
@@ -12,6 +14,13 @@ from ..utils import get_config_dir, get_overrides
 from .component_registry import ComponentRegistry
 
 logger = logging.getLogger(__name__)
+
+
+def haikunate(token_length: int = 4, delimiter: str = "-") -> str:
+    return Haikunator().haikunate(token_length=token_length, delimiter=delimiter)
+
+
+OmegaConf.register_new_resolver("haikunate", haikunate, use_cache=True)
 
 
 def _instantiate_hook(hook_config) -> Callable[[], None]:
@@ -82,10 +91,16 @@ class ExperimentConfig:
         with open(os.path.join(self.output_dir, "overrides.txt"), "w") as f:
             f.write(overrides)
 
-    def run(self):
+    def run(self, allow_missing_hydra_configs: bool = False):
         """This is called by run_experiment.py. Subclasses should override _run()."""
         logger.info("Copying inputs to run directory")
-        self.copy_inputs()
+        try:
+            self.copy_inputs()
+        except ValueError as err:
+            if allow_missing_hydra_configs:
+                logger.warning(f"Error copying inputs: {err}")
+            else:
+                raise err
         logger.info("running experiment config")
         self._run()
         logger.info("Running post-run hooks")
@@ -99,3 +114,12 @@ class ExperimentConfig:
         results = self.experiment.run()
         logger.info("saving experiment results")
         results.write(self.output_dir)
+
+
+def parse_config(cfg: DictConfig) -> ExperimentConfig:
+    if "config" in cfg:
+        cfg = cfg.config
+
+    config = instantiate(cfg, _recursive_=False)
+    config.parse_config()
+    return config

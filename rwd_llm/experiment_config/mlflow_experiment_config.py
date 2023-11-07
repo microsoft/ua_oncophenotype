@@ -57,18 +57,27 @@ class MLFlowExperimentConfig(ExperimentConfig):
             logger.info(
                 f"MLFlow run_name: {run.info.run_name} run_id: {run.info.run_id}"
             )
-            hydra_config_dir = hydra_utils.get_config_dir()
-            hydra_overrides = hydra_utils.get_overrides()
-            hydra_outputs_dir = hydra_utils.get_hydra_out_dir()
+            try:
+                hydra_config_dir = hydra_utils.get_config_dir()
+                mlflow.log_artifacts(hydra_config_dir, artifact_path="configs")
+                hydra_overrides = hydra_utils.get_overrides_dict()
+                for override_param, override_value in hydra_overrides.items():
+                    if override_param.startswith("+"):
+                        override_param = override_param[1:]
+                    at_loc = override_param.find("@")
+                    if at_loc >= 0:
+                        override_param = override_param[(at_loc + 1) :]
+                    mlflow.log_param(f"hydra_override.{override_param}", override_value)
+                hydra_outputs_dir = hydra_utils.get_hydra_out_dir()
+                mlflow.log_artifacts(hydra_outputs_dir, artifact_path="hydra")
+            except ValueError as err:
+                logger.warning(f"Error logging hydra data: {err}")
 
             logger.info("Logging pre-run artifacts to mlflow")
-            mlflow.log_artifacts(hydra_config_dir, artifact_path="configs")
-            mlflow.log_artifacts(hydra_outputs_dir, artifact_path="hydra")
             self._log_artifacts(self.pre_run_artifacts)
 
             if self.params is not None:
                 mlflow.log_params(self.params)
-            mlflow.log_param("hydra_overrides", hydra_overrides)
             logger.info("running experiment")
             results = self.experiment.run()
             if self.metrics is not None:
