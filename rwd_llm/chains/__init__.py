@@ -14,6 +14,7 @@ from .note_formatter_chain import NoteFormatterChain
 from .patient_history_grounded_answer_chain import PatientHistoryGroundedAnswerChain
 from .question_with_structured_output import chat_prompt_with_structured_output
 from .retrieval_chain import RetrievalAndClassificationChain, RetrievalChain
+from .self_inspection_chain import SelfInspectionChain
 from .stop_chain import LLMStopChain
 from .structured_summary import StructuredDocumentSummaryChain
 from .truncating_llm_chain import TruncatingLLMChain
@@ -36,6 +37,7 @@ __all__ = [
     "PatientHistoryGroundedAnswerChain",
     "RetrievalChain",
     "RetrievalAndClassificationChain",
+    "SelfInspectionChain",
     "StructuredDocumentSummaryChain",
     "TruncatingLLMChain",
     "UNSURE_LABEL",

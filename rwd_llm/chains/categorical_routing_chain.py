@@ -228,9 +228,10 @@ class CategoricalRoutingChain(Chain):
                     chain_inputs, callbacks=callbacks, return_only_outputs=True
                 )
             except Exception as e:
-                self.persistent_memory_provider.log_error(
-                    item_id=item_id, chain_name=cur_node.name, error=e
-                )
+                for key in keys_to_save:
+                    self.persistent_memory_provider.log_error(
+                        item_id=item_id, key=key, err=e
+                    )
                 raise e
             # logger.debug(f"Outputs of chain node {cur_node.name}: {outputs}")
             # memorize outputs that match output keys
