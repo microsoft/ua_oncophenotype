@@ -2,6 +2,7 @@ import logging
 import os
 import pprint
 from dataclasses import dataclass
+import traceback
 from typing import Dict, Optional
 
 import mlflow
@@ -71,7 +72,7 @@ class MLFlowExperimentConfig(ExperimentConfig):
                 hydra_outputs_dir = hydra_utils.get_hydra_out_dir()
                 mlflow.log_artifacts(hydra_outputs_dir, artifact_path="hydra")
             except ValueError as err:
-                logger.warning(f"Error logging hydra data: {err}")
+                logger.exception(f"Error logging hydra data: {err}")
 
             logger.info("Logging pre-run artifacts to mlflow")
             self._log_artifacts(self.pre_run_artifacts)
@@ -87,7 +88,7 @@ class MLFlowExperimentConfig(ExperimentConfig):
                     try:
                         metric_val = get_by_path(metrics, metric_key)
                     except Exception as e:
-                        logger.warning(f"Failed to get metric {metric_key}: {e}")
+                        logger.error(f"Failed to get metric {metric_key}: {e}")
                     mlflow.log_metric(metric_name, metric_val)
             logger.info("Writing experiment results")
             results.write(self.output_dir)

@@ -74,7 +74,7 @@ class PersistentMemoryProviderBase:
 
     def log_error(self, item_id: str, key: str, err: Exception) -> None:
         """Log an error creating a specific memory"""
-        logger.warning(f"Error creating memory {item_id}:{key}: {err}")
+        logger.exception(f"Error creating memory {item_id}:{key}: {err}")
 
     def _get_serializer(self, key: str) -> SerializerType:
         return self.custom_serializers.get(key, self.default_serializer)
@@ -282,7 +282,7 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
         )
         item_err_dir = self.persistence_dir / "errors" / item_id
         if not item_err_dir.exists():
-            item_err_dir.mkdir()
+            item_err_dir.mkdir(parents=True)
         err_file = item_err_dir / f"{key}.json"
         with open(err_file, "w") as fp:
             json.dump(err_val.dict(), fp)
