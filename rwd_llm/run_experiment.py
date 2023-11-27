@@ -5,9 +5,9 @@ from typing import Union
 import hydra
 import hydra.core
 from omegaconf import DictConfig, ListConfig
+from rwd_llm.experiment_config import parse_config
 
 from .utils import get_by_path
-from rwd_llm.experiment_config import parse_config
 
 
 logger = logging.getLogger(__name__)

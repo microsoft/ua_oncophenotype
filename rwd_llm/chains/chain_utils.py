@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 
 from langchain.prompts import BasePromptTemplate, PromptTemplate
 from langchain.prompts.chat import (
+    AIMessagePromptTemplate,
     BaseMessagePromptTemplate,
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
@@ -32,7 +33,7 @@ def get_example_prompt_template(
     if chat_prompt:
         messages: List[BaseMessagePromptTemplate] = []
         messages.append(HumanMessagePromptTemplate.from_template(instructions))
-        messages.append(SystemMessagePromptTemplate.from_template(answer_format))
+        messages.append(AIMessagePromptTemplate.from_template(answer_format))
         prompt = ChatPromptTemplate.from_messages(messages)
     else:
         template = completion_template.format(
