@@ -31,10 +31,10 @@ class ParsedPatientHistoryEvidence(PatientHistoryEvidence):
 
 
 class PatientHistoryGroundedAnswer(BaseModel):
-    reasoning: str = Field(description="Reasoning leading to the answer")
     evidence: List[PatientHistoryEvidence] = Field(
         description="Evidence spans from the patient history supporting the answer"
     )
+    reasoning: str = Field(description="Reasoning leading to the answer")
     contradictory_evidence: List[PatientHistoryEvidence] = Field(
         description=(
             "Optional evidence spans from the patient history potentially contradicting"
@@ -45,7 +45,6 @@ class PatientHistoryGroundedAnswer(BaseModel):
 
 
 DEFAULT_EXAMPLE = PatientHistoryGroundedAnswer(
-    reasoning="The reasoning leading to the answer.",
     evidence=[
         PatientHistoryEvidence(
             note_id="1",
@@ -56,6 +55,7 @@ DEFAULT_EXAMPLE = PatientHistoryGroundedAnswer(
             evidence="Another exact span from input supporting the answer.",
         ),
     ],
+    reasoning="The step-by-step reasoning leading to the answer.",
     contradictory_evidence=[
         PatientHistoryEvidence(
             note_id="2",

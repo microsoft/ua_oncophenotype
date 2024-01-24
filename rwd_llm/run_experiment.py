@@ -9,6 +9,10 @@ from rwd_llm.experiment_config import parse_config
 
 from .utils import get_by_path
 
+
+logger = logging.getLogger(__name__)
+
+
 INDENT_SIZE = 2
 INDENT = " " * INDENT_SIZE
 
@@ -30,7 +34,8 @@ def print_cfg(cfg: Union[DictConfig, ListConfig], indent: int = 0):
             else:
                 print(INDENT * indent + str(key) + ": " + str(value))
     else:
-        raise ValueError(f"Unexpected type {type(cfg)}")
+        logger.warning(f"Got non-Config value {type(cfg)} in print_cfg")
+        print(INDENT * indent + str(cfg))
 
 
 # must specify a config_dir via the command line
