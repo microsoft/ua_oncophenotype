@@ -19,9 +19,14 @@ def gold_label_eval(gold_labels, predicted_labels):
     Returns:
         Dict[str, Any]: Dict of evaluation metrics.
     """
-    return classification_report(
+    sk_report = classification_report(
         y_true=gold_labels, y_pred=predicted_labels, output_dict=True
     )
+    if not isinstance(sk_report, dict):
+        raise ValueError(f"Unexpected sk_report: {str(sk_report)}")
+    sk_report["support"] = len(gold_labels)
+    sk_report["n_errors"] = len([l for l in gold_labels if l == ERROR_LABEL])
+    return sk_report
 
 
 class Evaluation:
