@@ -25,7 +25,7 @@ def gold_label_eval(gold_labels, predicted_labels):
     if not isinstance(sk_report, dict):
         raise ValueError(f"Unexpected sk_report: {str(sk_report)}")
     sk_report["support"] = len(gold_labels)
-    sk_report["n_errors"] = len([l for l in gold_labels if l == ERROR_LABEL])
+    sk_report["n_errors"] = len([l for l in predicted_labels if l == ERROR_LABEL])
     return sk_report
 
 
