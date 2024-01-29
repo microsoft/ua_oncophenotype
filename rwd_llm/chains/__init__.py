@@ -3,6 +3,7 @@ from .categorical_routing_chain import CategoricalRoutingChain, ChainNode
 from .chain_utils import ERROR_LABEL, UNSURE_LABEL, get_prompt_template, load_from_json
 from .chat_evidence_chain import ChatEvidenceChain
 from .consistency_chain import LLMConsistencyChain
+from .document_filter_chain import DocumentFilterChain
 from .evidence_chain import EvidenceChain, find_evidence
 from .evidence_cot_chain import EvidenceCoTChain
 from .fixed_output_chain import FixedOutputChain
@@ -24,6 +25,7 @@ __all__ = [
     "CategoricalRoutingChain",
     "ChainNode",
     "ChatEvidenceChain",
+    "DocumentFilterChain",
     "EvidenceChain",
     "EvidenceCoTChain",
     "FixedOutputChain",
