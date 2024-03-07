@@ -1,7 +1,9 @@
 # Experiment that runs RAG (index-based retrieval) QA on a sample of the MIMIC dataset
 defaults:
-  - config/experiment/dataset: mimic_small_dataset
+  - config/experiment/dataset@dataset: sample_patient_dataset
+  - config/experiment/dataset@note_dataset: sample_note_dataset
   - config/experiment/chain: index_chain
+  - config/openai_config: sample_openai_config  # override this, just an example
 
 # some options for the experiment
 
@@ -26,13 +28,20 @@ openai:
     model_name: ${model_name}
 
 # choose the llm to use
-llm: ${openai}
+llm: ${azure_openai}
 
 # the actual config
 config:
   _target_: rwd_llm.experiment_config.ExperimentConfig
+  resources: 
+    - "dataset": ${dataset}
+    - "note_dataset": ${note_dataset}
   experiment:
     _target_: rwd_llm.experiment.Experiment
+    dataset:
+      # dataset is referenced through the 'resources'
+      _target_: rwd_llm.experiment_config.ComponentRegistry.get
+      name: "dataset"
     chain:
       # override some values from the chain specified in defults
       llm_class: ${llm.class}

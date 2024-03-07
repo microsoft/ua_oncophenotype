@@ -24,14 +24,14 @@ class OpenAIConfig:
         if self.api_type:
             openai.api_type = self.api_type
         openai.api_key = self.api_key
-        openai.api_base = self.api_base
+        openai.azure_endpoint = self.api_base
         openai.api_version = self.api_version
         _set_openai_env_vars()
 
 
 def _set_openai_env_vars():
-    if openai.api_base:
-        os.environ["OPENAI_API_BASE"] = openai.api_base
+    if openai.azure_endpoint:
+        os.environ["AZURE_OPENAI_ENDPOINT"] = openai.azure_endpoint
     if openai.api_version:
         os.environ["OPENAI_API_VERSION"] = openai.api_version
     if openai.api_key:
@@ -54,7 +54,7 @@ def setup_openai_from_dotenv(raise_error: bool = True):
         openai.api_key = api_key
     api_base = _get_var("OPENAI_API_BASE", raise_error=raise_error)
     if api_base:
-        openai.api_base = api_base
+        openai.azure_endpoint = api_base
     api_version = _get_var("OPENAI_API_VERSION", raise_error=raise_error)
     if api_version:
         openai.api_version = api_version

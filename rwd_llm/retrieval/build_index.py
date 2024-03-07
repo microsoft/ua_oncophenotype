@@ -2,10 +2,10 @@ import datetime as dt
 from typing import Dict, Iterable, Tuple, Union
 
 import pandas as pd
-from langchain.embeddings import OpenAIEmbeddings  # no azure specific library
+from langchain_openai import AzureOpenAIEmbeddings
 from langchain.embeddings.base import Embeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from openai.error import RateLimitError
+from openai import RateLimitError
 from rwd_llm.data_loaders.data_loaders_base import DatasetBase
 from rwd_llm.dtypes.dtypes import BaseObject, ClinicalNote, Patient
 from tenacity import retry
@@ -13,6 +13,8 @@ from tenacity.retry import retry_if_exception_type
 from tenacity.stop import stop_after_attempt
 from tenacity.wait import wait_random_exponential
 from tqdm import tqdm
+
+import openai
 
 from .chroma import Chroma
 
@@ -44,8 +46,10 @@ class BuildIndex:
         return self.index
 
     @staticmethod
-    def _get_embeddings_model(model_name: str) -> OpenAIEmbeddings:
-        embeddings = OpenAIEmbeddings(model=model_name)
+    def _get_embeddings_model(model_name: str) -> AzureOpenAIEmbeddings:
+        embeddings = AzureOpenAIEmbeddings(
+            azure_endpoint=openai.azure_endpoint, model=model_name
+        )
         return embeddings
 
     @staticmethod

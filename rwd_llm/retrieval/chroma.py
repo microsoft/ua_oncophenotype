@@ -1,6 +1,7 @@
 """Wrapper around ChromaDB embeddings platform.
 Langchain library version is missing some functionality, so we use this one instead
 """
+
 from __future__ import annotations
 
 import logging
@@ -76,11 +77,9 @@ class Chroma(VectorStore):
             self._client_settings = client_settings
         else:
             self._client_settings = chromadb.config.Settings()
-            if persist_directory is not None:
-                self._client_settings = chromadb.config.Settings(
-                    chroma_db_impl="duckdb+parquet", persist_directory=persist_directory
-                )
-        self._client = chromadb.Client(self._client_settings)
+        self._client = chromadb.PersistentClient(
+            path=persist_directory, settings=self._client_settings
+        )
         self._embedding_function = embedding_function
         self._persist_directory = persist_directory
         self._collection = self._client.get_or_create_collection(
@@ -277,17 +276,10 @@ class Chroma(VectorStore):
         self._client.delete_collection(self._collection.name)
 
     def persist(self) -> None:
-        """Persist the collection.
-
-        This can be used to explicitly persist the data to disk.
-        It will also be called automatically when the object is destroyed.
         """
-        if self._persist_directory is None:
-            raise ValueError(
-                "You must specify a persist_directory on"
-                "creation to persist the collection."
-            )
-        self._client.persist()
+        This used to be required, but is not any longer
+        """
+        pass
 
     @classmethod
     def from_texts(

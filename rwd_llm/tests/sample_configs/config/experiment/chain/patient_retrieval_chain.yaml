@@ -9,9 +9,9 @@ _target_: rwd_llm.chains.RetrievalAndClassificationChain
 retriever:
   _target_: rwd_llm.retrieval.NoteRetrievalSimple
   dataset:
-    # assume that the component registry has been populated with a 'dataset'
-    _target_: rwd_llm.experiment.ComponentRegistry.get
-    name: "dataset"
+    # assume that the component registry has been populated with a 'note_dataset'
+    _target_: rwd_llm.experiment_config.ComponentRegistry.get
+    name: "note_dataset"
 note_types:
   # This is the fake 'note type' for the sample dataset. In reality could be something
   # like ImagingReport.

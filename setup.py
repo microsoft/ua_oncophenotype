@@ -16,10 +16,10 @@ setup(
     description="LLM utilities for clinical NLP applications",
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*"]),
     install_requires=[
-        "chromadb>0.3",
         "hydra-core>=1.3",
-        "langchain==0.0.272",
-        "openai>=0.27",
+        "chromadb==0.4.3",
+        "langchain==0.1.11",
+        "openai>=1.0",
         "tiktoken>0.3",
         "haikunator>=2.1",
         "mlflow>=2.6",

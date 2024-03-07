@@ -38,7 +38,7 @@ config:
   experiment:
     _target_: rwd_llm.experiment.Experiment
     dataset:
-      _target_: rwd_llm.experiment.ComponentRegistry.get
+      _target_: rwd_llm.experiment_config.ComponentRegistry.get
       name: "dataset"
     chain:
       note_types:

@@ -160,11 +160,15 @@ class EvidenceChain(Chain):
         evidence_string = evidence_response[self.evidence_chain.output_key]
         try:
             evidence = find_evidence(evidence_string, inputs["text"])
-            extracted_string = inputs["text"][evidence.begin : evidence.end]
-            if extracted_string != evidence_string:
-                print(
-                    f"Warning:\n     '{extracted_string}' !=\n     '{evidence_string}'"
-                )
+            if evidence is None:
+                print(f"Warning: evidence ({evidence_string}) not found in text")
+                extracted_string = evidence_string
+            else:
+                extracted_string = inputs["text"][evidence.begin : evidence.end]
+                if extracted_string != evidence_string:
+                    print(
+                        f"Warning:\n     '{extracted_string}' !=\n     '{evidence_string}'"
+                    )
         except ValueError as e:
             print(f"Error: {e}")
             evidence = None

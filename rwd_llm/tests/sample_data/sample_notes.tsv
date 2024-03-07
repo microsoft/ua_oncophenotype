@@ -1,8 +1,8 @@
 note_id	patient_id	date	type	color	food	text
-note_001	pat_001	2018-01-01T00:00:00Z	note	red	mexican	This is a note. The patient's favorite color is red. He likes burritos.
-note_002	pat_001	2018-01-02T00:00:00Z	note	red	unsure	This is a note. The patient wore their lucky red shirt today. He did not have an appetite today.
-note_003	pat_001	2018-01-03T00:00:00Z	note	unsure	mexican	This is a note. The patient said they were feeling better today. He had tacos for lunch.
-note_004	pat_002	2018-01-04T00:00:00Z	note	yellow	italian	This is a note. The patient said the color yellow cheers them up. She likes pizza.
-note_005	pat_002	2018-01-05T00:00:00Z	note	yellow	unsure	This is a note. The patient said yellow was her favorite color. She does not like tacos.
-note_006	pat_002	2018-01-06T00:00:00Z	note	unsure	italian	This is a note. The patient said they were feeling better today. She had pepperoni pizza for lunch.
-note_007	pat_003	2018-01-07T00:00:00Z	note	unsure	unsure	This is a note. The patient got chili stains on their white shirt.
+note_001	pat_001	2018-01-01T00:00:00	note	red	mexican	This is a note. The patient's favorite color is red. He likes burritos.
+note_002	pat_001	2018-01-02T00:00:00	note	red	unsure	This is a note. The patient wore their lucky red shirt today. He did not have an appetite today.
+note_003	pat_001	2018-01-03T00:00:00	note	unsure	mexican	This is a note. The patient said they were feeling better today. He had tacos for lunch.
+note_004	pat_002	2018-01-04T00:00:00	note	yellow	italian	This is a note. The patient said the color yellow cheers them up. She likes pizza.
+note_005	pat_002	2018-01-05T00:00:00	note	yellow	unsure	This is a note. The patient said yellow was her favorite color. She does not like tacos.
+note_006	pat_002	2018-01-06T00:00:00	note	unsure	italian	This is a note. The patient said they were feeling better today. She had pepperoni pizza for lunch.
+note_007	pat_003	2018-01-07T00:00:00	note	unsure	unsure	This is a note. The patient got chili stains on their white shirt.

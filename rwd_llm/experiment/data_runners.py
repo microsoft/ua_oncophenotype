@@ -48,7 +48,8 @@ class DatasetRunner(DatasetRunnerBase):
                 r = chain(args, callbacks=callbacks)
                 return ob.id, r
             except Exception as e:
-                print(f"Error for note_id {ob.id}: {e}")
+                print(f"Error for item_id {ob.id}: {e}")
+                logger.exception(f"Error for item_id {ob.id}")
                 if self.raise_exceptions:
                     raise e
                 return ob.id, e

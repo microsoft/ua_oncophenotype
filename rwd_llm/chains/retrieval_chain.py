@@ -8,6 +8,7 @@ from ..retrieval import NoteRetrievalBase
 
 
 def note_to_document(note: ClinicalNote) -> Document:
+    """Convert our clinical note type to a langchain Document."""
     note_dict = note.to_dict()
     text = note_dict.pop("text")
     metadata = note_dict.pop("metadata", {})
