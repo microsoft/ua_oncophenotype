@@ -1,7 +1,7 @@
 import os
 from typing import Dict, Optional
 
-from langchain_openai import OpenAIEmbeddings  # no azure specific library
+from langchain_openai import AzureOpenAIEmbeddings
 
 from .chroma import Chroma
 
@@ -12,12 +12,12 @@ class IndexLoader:
         self.embedding_name = embedding_name
 
     @staticmethod
-    def _get_embeddings_model(embedding_name: str) -> OpenAIEmbeddings:
+    def _get_embeddings_model(embedding_name: str) -> AzureOpenAIEmbeddings:
         """
         Gets an OpenAIEmbeddings object.
         returns: OpenAIEmbeddings object
         """
-        embeddings = OpenAIEmbeddings(
+        embeddings = AzureOpenAIEmbeddings(
             model=embedding_name,
         )
         return embeddings

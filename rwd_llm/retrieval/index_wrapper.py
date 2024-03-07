@@ -2,7 +2,7 @@ import os
 from typing import Dict, Optional
 
 from langchain.vectorstores.base import VectorStore
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import AzureOpenAIEmbeddings
 
 from .chroma import Chroma
 
@@ -12,12 +12,12 @@ class IndexWrapper:
         self.index = self.load_index(index_path, embedding_name)
 
     @staticmethod
-    def _get_embeddings_model(embedding_name: str) -> OpenAIEmbeddings:
+    def _get_embeddings_model(embedding_name: str) -> AzureOpenAIEmbeddings:
         """
         Gets an OpenAIEmbeddings object.
         returns: OpenAIEmbeddings object
         """
-        embeddings = OpenAIEmbeddings(
+        embeddings = AzureOpenAIEmbeddings(
             model=embedding_name,
         )
         return embeddings
