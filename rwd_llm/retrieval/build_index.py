@@ -1,10 +1,11 @@
 import datetime as dt
 from typing import Dict, Iterable, Tuple, Union
 
+import openai
 import pandas as pd
-from langchain_openai import AzureOpenAIEmbeddings
 from langchain.embeddings.base import Embeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_openai import AzureOpenAIEmbeddings
 from openai import RateLimitError
 from rwd_llm.data_loaders.data_loaders_base import DatasetBase
 from rwd_llm.dtypes.dtypes import BaseObject, ClinicalNote, Patient
@@ -13,8 +14,6 @@ from tenacity.retry import retry_if_exception_type
 from tenacity.stop import stop_after_attempt
 from tenacity.wait import wait_random_exponential
 from tqdm import tqdm
-
-import openai
 
 from .chroma import Chroma
 

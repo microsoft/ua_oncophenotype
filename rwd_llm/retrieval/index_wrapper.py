@@ -1,8 +1,8 @@
 import os
 from typing import Dict, Optional
 
-from langchain.embeddings import OpenAIEmbeddings  # no azure specific library
 from langchain.vectorstores.base import VectorStore
+from langchain_openai import OpenAIEmbeddings
 
 from .chroma import Chroma
 

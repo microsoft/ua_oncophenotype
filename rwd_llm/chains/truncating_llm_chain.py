@@ -2,14 +2,14 @@ import logging
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import tiktoken
-from langchain import BasePromptTemplate
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains import LLMChain
-from langchain.chat_models import ChatOpenAI
 from langchain.llms.openai import BaseOpenAI
 from langchain.pydantic_v1 import validator
 from langchain.schema import PromptValue
+from langchain.schema.prompt_template import BasePromptTemplate
 from langchain.text_splitter import TokenTextSplitter
+from langchain_community.chat_models import ChatOpenAI
 
 logger = logging.getLogger(__name__)
 

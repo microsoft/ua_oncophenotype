@@ -32,7 +32,7 @@ deployment_name: ${model_name}
 azure_openai:
   class:
     _target_: "hydra.utils.get_class"
-    path: "langchain.chat_models.AzureChatOpenAI"
+    path: "langchain_community.chat_models.AzureChatOpenAI"
   extra_args:
     deployment_name: ${deployment_name}
     model_name: ${model_name}
@@ -40,7 +40,7 @@ azure_openai:
 openai:
   class:
     _target_: "hydra.utils.get_class"
-    path: "langchain.chat_models.ChatOpenAI"
+    path: "langchain_community.chat_models.ChatOpenAI"
   extra_args:
     model_name: ${model_name}
 

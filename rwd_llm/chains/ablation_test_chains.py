@@ -2,19 +2,19 @@
 Chains used for ablation study. Similar to PatientHistoryGroundedAnswerChain, but omits
 evidence or evidence+reasonong.
 """
+
 import logging
 from typing import Any, Dict, List, Optional, Union, cast
 
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.llm import LLMChain
-from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain.pydantic_v1 import BaseModel, Field, validator
-from langchain.schema import BaseMemory, Document
+from langchain.schema import BaseMemory
+from langchain_community.chat_models import ChatOpenAI
 from rwd_llm.output_parsers import PydanticOutputParserWithExamples
 
 from .categorical_chain import normalize_label_mapping, parse_output
-from .evidence_chain import find_evidence
 from .question_with_structured_output import chat_prompt_with_structured_output
 
 logger = logging.getLogger(__name__)

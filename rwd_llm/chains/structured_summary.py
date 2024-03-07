@@ -5,10 +5,10 @@ from langchain.callbacks.base import Callbacks
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
-from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain.schema import BaseMemory, Document
+from langchain_community.chat_models import ChatOpenAI
 from rwd_llm.output_parsers.pydantic_parser_with_examples import (
     PydanticOutputParserWithExamples,
 )

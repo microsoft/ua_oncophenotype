@@ -167,7 +167,8 @@ class EvidenceChain(Chain):
                 extracted_string = inputs["text"][evidence.begin : evidence.end]
                 if extracted_string != evidence_string:
                     print(
-                        f"Warning:\n     '{extracted_string}' !=\n     '{evidence_string}'"
+                        f"Warning:\n     '{extracted_string}' !=\n    "
+                        f" '{evidence_string}'"
                     )
         except ValueError as e:
             print(f"Error: {e}")

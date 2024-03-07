@@ -55,8 +55,7 @@ def get_aml_mlflow_tracking_uri(
         f"azureml://{aml_workspace_region}.api.azureml.ms/mlflow/v1.0/"
         f"subscriptions/{azure_subscription_id}/"
         f"resourceGroups/{aml_workspace_resource_group}/"
-        f"providers/Microsoft.MachineLearningServices/"
+        "providers/Microsoft.MachineLearningServices/"
         f"workspaces/{aml_workspace_name}"
     )
     return mlflow_tracking_uri
-

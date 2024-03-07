@@ -1,4 +1,5 @@
 from langchain.docstore.document import Document
+
 from ..document_filter_chain import DocumentFilterChain
 
 

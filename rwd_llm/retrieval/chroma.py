@@ -279,7 +279,6 @@ class Chroma(VectorStore):
         """
         This used to be required, but is not any longer
         """
-        pass
 
     @classmethod
     def from_texts(

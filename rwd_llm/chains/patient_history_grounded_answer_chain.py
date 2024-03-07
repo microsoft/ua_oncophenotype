@@ -3,10 +3,10 @@ from typing import Any, Dict, List, Optional, Union, cast
 
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.llm import LLMChain
-from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain.pydantic_v1 import BaseModel, Field, validator
 from langchain.schema import BaseMemory, Document
+from langchain_community.chat_models import ChatOpenAI
 from rwd_llm.output_parsers import PydanticOutputParserWithExamples
 
 from .categorical_chain import normalize_label_mapping, parse_output

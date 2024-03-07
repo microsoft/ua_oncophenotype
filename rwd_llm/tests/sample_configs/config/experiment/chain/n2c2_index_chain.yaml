@@ -8,7 +8,7 @@ preamble: >
 question: "Does this patient experience abdominal pain?"
 llm_class: 
   _target_: "hydra.utils.get_class"
-  path: "langchain.chat_models.AzureChatOpenAI"
+  path: "langchain_community.chat_models.AzureChatOpenAI"
 query: "abdominal or stomach"
 search_mode: "similarity"
 k: 3
