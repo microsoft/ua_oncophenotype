@@ -18,7 +18,10 @@ defaults:
   - config/experiment/chain: patient_retrieval_chain
   # Select the openai parameters (endpoint, key, etc.)
   - config/openai_config: sample_openai_config  # override this, just an example
+  # holds info on the LLM class and deployment to use
   - llm: azure_openai
+  # add file_tracer to root level, we'll add it to a list of callbacks in the config
+  - config/experiment/callbacks@file_tracer: file_tracer
   - _self_
 
 #
@@ -32,6 +35,7 @@ config:
   resources: 
     - "dataset": ${dataset}
     - "note_dataset": ${note_dataset}
+  output_dir: "experiment_output"
   experiment:
     _target_: rwd_llm.experiment.Experiment
     dataset:
@@ -53,4 +57,9 @@ config:
       n_threads: 1
     evaluation:
       _target_: rwd_llm.eval.ClassificationEvaluation
-  output_dir: "experiment_output"
+    callbacks:
+      - ${file_tracer}
+  pre_run_hooks:
+    # this will delete the contents of the output directory before running the experiment
+    - _target_: rwd_llm.hooks.EnsureEmptyDirectoryHook
+      dir: ${config.output_dir}

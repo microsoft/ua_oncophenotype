@@ -3,6 +3,7 @@ defaults:
   # - config/experiment/dataset@dataset: sample_patient_dataset
   - config/experiment/chain: patient_retrieval_chain
   - llm: azure_openai
+  - config/experiment/callbacks@file_tracer: file_tracer
 
 # some options for the experiment
 
@@ -39,4 +40,11 @@ config:
       n_threads: 1
     evaluation:
       _target_: rwd_llm.eval.ClassificationEvaluation
+    callbacks:
+      - ${file_tracer}
   output_dir: "experiment_output"
+  pre_run_hooks:
+    # this will delete the contents of the output directory before running the experiment
+    - _target_: rwd_llm.hooks.EnsureEmptyDirectoryHook
+      dir: ${config.output_dir}
+

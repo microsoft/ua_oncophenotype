@@ -2,3 +2,7 @@
 __pycache__
 .vscode
 *.egg-info
+
+/build
+/dist
+/sas_token.sh

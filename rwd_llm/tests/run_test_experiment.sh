@@ -18,9 +18,9 @@ OPENAI_CONFIG=local_openai_config
 # OPENAI_CONFIG=local_openai_alt_config
 
 # for creating the index add the argument: config/experiment/chain/index=build_index 
-# EXPERIMENT=patient_index_retrieval_experiment_config.yaml
+EXPERIMENT=patient_index_retrieval_experiment_config.yaml
 
-EXPERIMENT=patient_retrieval_experiment_config.yaml
+# EXPERIMENT=patient_retrieval_experiment_config.yaml
 # EXPERIMENT=note_experiment_config.yaml
 # EXPERIMENT=patient_tumor_site_retrieval_config.yaml
 

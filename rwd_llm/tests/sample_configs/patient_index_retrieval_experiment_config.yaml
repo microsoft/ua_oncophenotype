@@ -1,10 +1,11 @@
 # Experiment that runs RAG (index-based retrieval) QA on a sample of the MIMIC dataset
 defaults:
+  - llm: azure_openai
+  - config/openai_config: sample_openai_config  # override this, just an example
   - config/experiment/dataset@dataset: sample_patient_dataset
   - config/experiment/dataset@note_dataset: sample_note_dataset
   - config/experiment/chain: index_chain
-  - config/openai_config: sample_openai_config  # override this, just an example
-  - llm: azure_openai
+  - config/experiment/callbacks@file_tracer: file_tracer
 
 # the actual config
 config:
@@ -27,4 +28,10 @@ config:
       n_threads: 1
     evaluation:
       _target_: rwd_llm.eval.ClassificationEvaluation
+    callbacks:
+      - ${file_tracer}
   output_dir: "experiment_output"
+  pre_run_hooks:
+    # this will delete the contents of the output directory before running the experiment
+    - _target_: rwd_llm.hooks.EnsureEmptyDirectoryHook
+      dir: ${config.output_dir}
