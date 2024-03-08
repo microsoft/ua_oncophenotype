@@ -2,6 +2,7 @@ defaults:
   - config/experiment/dataset@dataset: onco_dataset_small
   # - config/experiment/dataset@dataset: sample_patient_dataset
   - config/experiment/chain: patient_retrieval_chain
+  - llm: azure_openai
 
 # some options for the experiment
 
@@ -11,24 +12,6 @@ defaults:
 # deployment_name: ${model_name}
 model_name: gpt-3.5-turbo
 deployment_name: gpt-35-turbo
-
-azure_openai:
-  class:
-    _target_: "hydra.utils.get_class"
-    path: "langchain_community.chat_models.AzureChatOpenAI"
-  extra_args:
-    deployment_name: ${deployment_name}
-    model_name: ${model_name}
-
-openai:
-  class:
-    _target_: "hydra.utils.get_class"
-    path: "langchain_community.chat_models.ChatOpenAI"
-  extra_args:
-    model_name: ${model_name}
-
-# choose the llm to use
-llm: ${azure_openai}
 
 # the actual config
 config:
