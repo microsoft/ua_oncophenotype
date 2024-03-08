@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Optional
 
 from langchain.chains.base import Chain
-from langchain.pydantic_v1 import Field
 from langchain.docstore.document import Document
 
 

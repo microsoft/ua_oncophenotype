@@ -1,5 +1,6 @@
 from typing import Any, Dict, List, Optional
 
+from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
 from langchain.schema import Document
 from rwd_llm.dtypes import ClinicalNote, NoteFormatterBase
@@ -8,6 +9,7 @@ from ..retrieval import NoteRetrievalBase
 
 
 def note_to_document(note: ClinicalNote) -> Document:
+    """Convert our clinical note type to a langchain Document."""
     note_dict = note.to_dict()
     text = note_dict.pop("text")
     metadata = note_dict.pop("metadata", {})
@@ -33,7 +35,10 @@ class RetrievalChain(Chain):
         """Defines the output keys."""
         return [self.output_key]
 
-    def _call(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
+    def _call(
+        self,
+        inputs: Dict[str, Any],
+    ) -> Dict[str, Any]:
         notes = self.retriever.get_patient_notes(
             patient_id=inputs[self.patient_id_key], note_types=self.note_types
         )
@@ -65,13 +70,20 @@ class RetrievalAndClassificationChain(Chain):
         """Defines the output keys."""
         return self.classifier.output_keys + ["patient_id"]
 
-    def _call(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
+    def _call(
+        self,
+        inputs: Dict[str, Any],
+        run_manager: Optional[CallbackManagerForChainRun] = None,
+    ) -> Dict[str, Any]:
+        _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         patient_id = inputs["id"]
         notes = self.retriever.get_patient_notes(
             patient_id=patient_id, note_types=self.note_types
         )
         notes_text = self.note_formatter.format(notes)
         inputs = {"text": notes_text}
-        outputs = self.classifier(inputs, return_only_outputs=True)
+
+        callbacks = _run_manager.get_child()
+        outputs = self.classifier(inputs, callbacks=callbacks, return_only_outputs=True)
         outputs["patient_id"] = patient_id
         return outputs

@@ -13,9 +13,17 @@ set -e
 # export LANGCHAIN_SESSION=default
 # export LANGCHAIN_SESSION=test01
 
-EXPERIMENT=patient_retrieval_experiment_config.yaml
+# OPENAI_CONFIG=sample_openai_config
+OPENAI_CONFIG=local_openai_config
+# OPENAI_CONFIG=local_openai_alt_config
+
+# for creating the index add the argument: config/experiment/chain/index=build_index 
+EXPERIMENT=patient_index_retrieval_experiment_config.yaml
+
+# EXPERIMENT=patient_retrieval_experiment_config.yaml
 # EXPERIMENT=note_experiment_config.yaml
 # EXPERIMENT=patient_tumor_site_retrieval_config.yaml
+
 
 # get the location of this script, which is the data_root_dir for the sample data
 TESTS_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -26,5 +34,6 @@ python -m rwd_llm.run_experiment \
     -cp tests/sample_configs \
     -cn $EXPERIMENT \
     +dataset.data_root_dir=$DATA_DIR \
+    config/openai_config=$OPENAI_CONFIG \
     +config.experiment.data_runner.raise_exceptions=true \
     $*

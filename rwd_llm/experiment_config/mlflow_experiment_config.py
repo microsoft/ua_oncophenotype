@@ -2,7 +2,6 @@ import logging
 import os
 import pprint
 from dataclasses import dataclass
-import traceback
 from typing import Dict, Optional
 
 import mlflow

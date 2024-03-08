@@ -10,7 +10,7 @@ preamble: >
 question: "alcohol abuse is defined as: Recent alcohol abuse history which is an active problem at the time of admission, whether it is the primary cause of admission or not.\n Does this patient have history of alcohol abuse?"
 llm_class: 
   _target_: "hydra.utils.get_class"
-  path: "langchain.chat_models.AzureChatOpenAI"
+  path: "langchain_community.chat_models.AzureChatOpenAI"
 query: "Alcohol Abuse: Recent alcohol abuse history which is an active problem at the time of admission, whether it is the primary cause of admission or not."
 search_mode: "similarity"
 k: 3

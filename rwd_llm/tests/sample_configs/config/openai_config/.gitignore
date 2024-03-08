@@ -1,0 +1,4 @@
+# These configs will contain secrets, so don't check them in
+*.yaml
+# ... but the sample is okay
+!sample_openai_config.yaml

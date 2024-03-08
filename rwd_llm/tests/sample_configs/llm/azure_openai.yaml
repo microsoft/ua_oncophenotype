@@ -1,0 +1,6 @@
+class:
+  _target_: "hydra.utils.get_class"
+  path: "langchain_community.chat_models.AzureChatOpenAI"
+extra_args:
+  deployment_name: gpt-4
+  model_name: gpt-4

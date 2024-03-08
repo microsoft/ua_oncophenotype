@@ -11,38 +11,18 @@ defaults:
   # case it's referenced by config/experiment/dataset and within the
   # patient_retrieval_chain
   - config/experiment/dataset@dataset: sample_patient_dataset
+  - config/experiment/dataset@note_dataset: sample_note_dataset
   # Select the chain to run.  Without the '@' syntax used with dataset above, it is
   # injected at the location corresponding to the directory structure, here
   # config/experiment/chain.
   - config/experiment/chain: patient_retrieval_chain
-
-#
-# Some options for the experiment.  This just allows us to specify the OpenAI model, and
-# whether we are using Azure OpenAI service or the standard OpenAI service.
-#
-
-# model_name: "gpt-4"
-# deployment_name: ${model_name}
-model_name: gpt-3.5-turbo
-deployment_name: gpt-35-turbo
-
-azure_openai:
-  class:
-    _target_: "hydra.utils.get_class"
-    path: "langchain.chat_models.AzureChatOpenAI"
-  extra_args:
-    deployment_name: ${deployment_name}
-    model_name: ${model_name}
-
-openai:
-  class:
-    _target_: "hydra.utils.get_class"
-    path: "langchain.chat_models.ChatOpenAI"
-  extra_args:
-    model_name: ${model_name}
-
-# choose the llm to use
-llm: ${azure_openai}
+  # Select the openai parameters (endpoint, key, etc.)
+  - config/openai_config: sample_openai_config  # override this, just an example
+  # holds info on the LLM class and deployment to use
+  - llm: azure_openai
+  # add file_tracer to root level, we'll add it to a list of callbacks in the config
+  - config/experiment/callbacks@file_tracer: file_tracer
+  - _self_
 
 #
 # the actual config
@@ -54,11 +34,13 @@ config:
   # listed here (to support dependencies between resources).
   resources: 
     - "dataset": ${dataset}
+    - "note_dataset": ${note_dataset}
+  output_dir: "experiment_output"
   experiment:
     _target_: rwd_llm.experiment.Experiment
     dataset:
       # dataset is referenced through the 'resources'
-      _target_: rwd_llm.experiment.ComponentRegistry.get
+      _target_: rwd_llm.experiment_config.ComponentRegistry.get
       name: "dataset"
     chain:
       # The contents of /config/experiment/chain is specified in the defaults list,
@@ -75,4 +57,9 @@ config:
       n_threads: 1
     evaluation:
       _target_: rwd_llm.eval.ClassificationEvaluation
-  output_dir: "experiment_output"
+    callbacks:
+      - ${file_tracer}
+  pre_run_hooks:
+    # this will delete the contents of the output directory before running the experiment
+    - _target_: rwd_llm.hooks.EnsureEmptyDirectoryHook
+      dir: ${config.output_dir}

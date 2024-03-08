@@ -3,10 +3,10 @@ from typing import Any, List, Optional, Tuple
 from langchain.callbacks.manager import Callbacks
 from langchain.chains.combine_documents.base import BaseCombineDocumentsChain
 from langchain.docstore.document import Document
-from langchain.prompts.base import BasePromptTemplate
 from langchain.prompts.prompt import PromptTemplate
 from langchain.pydantic_v1 import Extra, Field
 from langchain.schema import format_document
+from langchain.schema.prompt_template import BasePromptTemplate
 
 
 def _get_default_document_prompt() -> PromptTemplate:

@@ -1,38 +1,24 @@
 # Experiment that runs RAG (index-based retrieval) QA on a sample of the MIMIC dataset
 defaults:
-  - config/experiment/dataset: mimic_small_dataset
+  - llm: azure_openai
+  - config/openai_config: sample_openai_config  # override this, just an example
+  - config/experiment/dataset@dataset: sample_patient_dataset
+  - config/experiment/dataset@note_dataset: sample_note_dataset
   - config/experiment/chain: index_chain
-
-# some options for the experiment
-
-# model_name: "gpt-4"
-# deployment_name: ${model_name}
-model_name: gpt-3.5-turbo
-deployment_name: gpt-35-turbo
-
-azure_openai:
-  class:
-    _target_: "hydra.utils.get_class"
-    path: "langchain.chat_models.AzureChatOpenAI"
-  extra_args:
-    deployment_name: ${deployment_name}
-    model_name: ${model_name}
-
-openai:
-  class:
-    _target_: "hydra.utils.get_class"
-    path: "langchain.chat_models.ChatOpenAI"
-  extra_args:
-    model_name: ${model_name}
-
-# choose the llm to use
-llm: ${openai}
+  - config/experiment/callbacks@file_tracer: file_tracer
 
 # the actual config
 config:
   _target_: rwd_llm.experiment_config.ExperimentConfig
+  resources: 
+    - "dataset": ${dataset}
+    - "note_dataset": ${note_dataset}
   experiment:
     _target_: rwd_llm.experiment.Experiment
+    dataset:
+      # dataset is referenced through the 'resources'
+      _target_: rwd_llm.experiment_config.ComponentRegistry.get
+      name: "dataset"
     chain:
       # override some values from the chain specified in defults
       llm_class: ${llm.class}
@@ -42,4 +28,10 @@ config:
       n_threads: 1
     evaluation:
       _target_: rwd_llm.eval.ClassificationEvaluation
+    callbacks:
+      - ${file_tracer}
   output_dir: "experiment_output"
+  pre_run_hooks:
+    # this will delete the contents of the output directory before running the experiment
+    - _target_: rwd_llm.hooks.EnsureEmptyDirectoryHook
+      dir: ${config.output_dir}

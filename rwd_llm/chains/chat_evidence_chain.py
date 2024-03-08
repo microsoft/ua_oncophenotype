@@ -8,7 +8,6 @@ from langchain.chains.loading import (
     load_chain_from_config,
     type_to_loader_dict,
 )
-from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import (
     AIMessagePromptTemplate,
     BaseMessagePromptTemplate,
@@ -16,6 +15,7 @@ from langchain.prompts.chat import (
     HumanMessagePromptTemplate,
     SystemMessagePromptTemplate,
 )
+from langchain_community.chat_models import ChatOpenAI
 
 from .consistency_chain import LLMConsistencyChain
 from .evidence_chain import find_evidence

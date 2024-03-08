@@ -1,0 +1,5 @@
+_target_: rwd_llm.llms.llm_utils.OpenAIConfig
+api_type: azure
+api_base: https://my-openai.openai.azure.com/
+api_version: "2023-05-15"
+api_key: <my secret key>
