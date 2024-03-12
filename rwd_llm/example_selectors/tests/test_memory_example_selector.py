@@ -1,6 +1,10 @@
 from ...memory.persistent_kv_memory import FileMemoryProvider
 from ...memory.pickle_serializer import PickleSerializer
 from ..memory_example_selector import MemoryExampleSelector
+from rwd_llm.chains.patient_history_grounded_answer_chain import (
+    PatientHistoryGroundedAnswer,
+    PatientHistoryEvidence,
+)
 from tempfile import TemporaryDirectory
 
 import pandas as pd
@@ -15,6 +19,15 @@ def test_memory_example_selector():
         # set up some memories to use as examples
         mp = FileMemoryProvider.initialize(run_id=RUN_ID, persistence_dir=temp_dir)
         # we expect serialized objects when we read from memory
+        PatientHistoryGroundedAnswer(
+            evidence=[
+                PatientHistoryEvidence(note_id="1", evidence="evidence_a_1"),
+                PatientHistoryEvidence(note_id="2", evidence="evidence_a_2"),
+            ],
+            reasoning="because...",
+            contradictory_evidence=[],
+            answer="answer_a",
+        )
         mp.add_memory("item1", "mem1", ser("val_a"))
         mp.add_memory("item1", "mem2", ser("val_b"))
         mp.add_memory("item2", "mem1", ser("val_c"))

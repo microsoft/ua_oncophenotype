@@ -14,7 +14,7 @@ class FewShotChain(Chain):
 
     @property
     def input_keys(self) -> List[str]:
-        return list(*self.expected_inputs)
+        return list(self.expected_inputs)
 
     @property
     def output_keys(self) -> List[str]:

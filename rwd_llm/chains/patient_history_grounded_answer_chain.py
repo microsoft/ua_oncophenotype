@@ -7,6 +7,7 @@ from langchain.output_parsers import PydanticOutputParser
 from langchain.pydantic_v1 import BaseModel, Field, validator
 from langchain.schema import BaseMemory, Document
 from langchain_community.chat_models import ChatOpenAI
+from langchain_core.example_selectors.base import BaseExampleSelector
 from rwd_llm.output_parsers import PydanticOutputParserWithExamples
 
 from .categorical_chain import normalize_label_mapping, parse_output
@@ -197,12 +198,13 @@ class PatientHistoryGroundedAnswerChain(LLMChain):
         answer_key="answer",
         parsed_answer_key="parsed_answer",
         label_mapping: Optional[Union[List[str], Dict[str, str]]] = None,
-        examples: Optional[List[dict]] = None,
+        examples: Optional[Union[List[dict], BaseExampleSelector]] = None,
+        example_input_vars: Optional[List[str]] = None,
         example_output_var: str = "result",
         example_indent: int = 2,
     ) -> "PatientHistoryGroundedAnswerChain":
         parser: PydanticOutputParser = DEFAULT_PARSER
-        examples = examples or []  # ensure it's a list
+        examples = examples or []  # ensure it's a list if empty
         prompt = chat_prompt_with_structured_output(
             parser=parser,
             preamble=preamble,
@@ -211,6 +213,7 @@ class PatientHistoryGroundedAnswerChain(LLMChain):
             input_variables=input_variables,
             format_instructions_variable=format_instructions_variable,
             examples=examples,
+            example_input_vars=example_input_vars,
             example_output_var=example_output_var,
             example_indent=example_indent,
         )
