@@ -3,30 +3,9 @@ from typing import Dict, List, Optional
 
 import pandas as pd
 from rwd_llm.dtypes.dtypes import ClinicalNote, Label, Patient
+from rwd_llm.utils import load_dataframe
 
 from .data_loaders_base import DataLoaderBase, DatasetBase
-
-
-def _load_dataframe(
-    dataframe_path,
-    data_root_dir: Optional[str],
-) -> pd.DataFrame:
-    if data_root_dir:
-        # allow override of data location
-        dataframe_path = os.path.join(data_root_dir, dataframe_path)
-    _, file_ext = os.path.splitext(dataframe_path)
-    if file_ext.lower() == ".json":
-        df = pd.read_json(dataframe_path)
-    elif file_ext.lower() == ".csv":
-        df = pd.read_csv(dataframe_path)
-    elif file_ext.lower() == ".tsv":
-        df = pd.read_csv(dataframe_path, sep="\t")
-    else:
-        raise ValueError(f"Unrecognized file extension: {file_ext}")
-
-    df = df.astype(str)
-
-    return df
 
 
 def _get_split_df(
@@ -140,7 +119,7 @@ class DataframeClinicalNoteDataLoader(DataLoaderBase):
         self.label_column = label_column
 
     def load(self, split_name: Optional[str] = None) -> DatasetBase:
-        df = _load_dataframe(self.dataframe_path, self.data_root_dir)
+        df = load_dataframe(self.dataframe_path, self.data_root_dir)
         df = _get_split_df(df, self.split_column, split_name)
 
         notes = _load_notes(
@@ -181,7 +160,7 @@ class DataframePatientDataLoader(DataLoaderBase):
         self.label_column = label_column
 
     def load(self, split_name: Optional[str] = None) -> DatasetBase:
-        df = _load_dataframe(self.dataframe_path, self.data_root_dir)
+        df = load_dataframe(self.dataframe_path, self.data_root_dir)
         df = _get_split_df(df, self.split_column, split_name)
 
         patient_ids = set(df[self.patient_id_column].unique())

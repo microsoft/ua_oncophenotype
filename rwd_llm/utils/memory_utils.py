@@ -2,8 +2,8 @@ import json
 from pathlib import Path
 from typing import Optional, Union
 
-from ..memory import PickleDeserializer
 from ..memory.persistent_kv_memory import DeserializerType, SerializedMemoryValue
+from ..memory.pickle_serializer import PickleDeserializer
 
 
 def read_memory(

@@ -6,6 +6,7 @@ from .consistency_chain import LLMConsistencyChain
 from .document_filter_chain import DocumentFilterChain
 from .evidence_chain import EvidenceChain, find_evidence
 from .evidence_cot_chain import EvidenceCoTChain
+from .few_shot_chain import FewShotChain
 from .fixed_output_chain import FixedOutputChain
 from .index_chain import IndexChain
 from .map_documents import MapDocumentsChain
@@ -28,6 +29,7 @@ __all__ = [
     "DocumentFilterChain",
     "EvidenceChain",
     "EvidenceCoTChain",
+    "FewShotChain",
     "FixedOutputChain",
     "IndexChain",
     "LLMConsistencyChain",
