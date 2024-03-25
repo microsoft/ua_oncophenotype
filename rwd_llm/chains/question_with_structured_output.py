@@ -3,17 +3,16 @@ from typing import List, Optional, Union
 
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts.chat import (
+    AIMessagePromptTemplate,
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
-    AIMessagePromptTemplate,
     SystemMessagePromptTemplate,
 )
+from langchain.schema.messages import AIMessage
 from langchain_core.example_selectors.base import BaseExampleSelector
 from langchain_core.prompts.few_shot import FewShotChatMessagePromptTemplate
-from langchain.schema.messages import AIMessage
 from rwd_llm.utils import get_prompt_from_message
 from rwd_llm.utils.prompt_utils import validate_prompt_inputs
-
 
 logger = logging.getLogger(__name__)
 

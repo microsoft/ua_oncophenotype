@@ -17,6 +17,7 @@ def test_config_experiment():
     # need to set OPENAI_API_KEY and OPENAI_API_VERSION to something, otherwise it will fail
     os.environ["OPENAI_API_KEY"] = "fake"
     os.environ["OPENAI_API_VERSION"] = "fake"
+    os.environ["AZURE_OPENAI_ENDPOINT"] = "fake"
 
     initialize_config_dir(
         config_dir=f"{CUR_DIR}/sample_configs",
