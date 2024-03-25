@@ -12,6 +12,7 @@ from rwd_llm.utils import load_dataframe
 from rwd_llm.chains.patient_history_grounded_answer_chain import (
     PatientHistoryGroundedAnswer,
 )
+import re
 
 DESERIALIZER = PickleDeserializer()
 
@@ -77,6 +78,7 @@ class MemoryExampleSelector(BaseExampleSelector):
                     self.examples[str(item_id)] = self._grounded_answer_to_example(
                         value
                     )
+                
 
     def _grounded_answer_to_example(
         self, p: PatientHistoryGroundedAnswer

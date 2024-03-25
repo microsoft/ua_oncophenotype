@@ -8,7 +8,7 @@ dependencies:
   - pip
   - wheel
   - langchain==0.1.11
-  - chromadb==0.4.24
+  - chromadb==0.4.15
   - pip:
     - hydra-core==1.3.2
     - num2words==0.5.12
