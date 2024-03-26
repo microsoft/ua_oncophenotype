@@ -103,7 +103,6 @@ def _create_index(
         filter_cols=["filter_col"],
         example_patient_history_key="ph_key",
         example_result_key="result_key",
-        example_index_key="evidence",
         build_index=True,
         k=3,
     )
@@ -146,7 +145,6 @@ def test_index_example_knn_selector():
             filter_cols=["filter_col"],
             example_patient_history_key="ph_key",
             example_result_key="result_key",
-            example_index_key="evidence",
             build_index=True,
             k=3,
         )

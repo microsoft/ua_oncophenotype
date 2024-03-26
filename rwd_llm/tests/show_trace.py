@@ -15,3 +15,18 @@ trace_file = TRACE_DIR / f"{the_id}.json"
 trace = json.load(trace_file.open("r"))
 print_trace(trace)
 # COMMAND ----------
+
+print(trace["child_runs"][0]["child_runs"][0]["child_runs"][0]["inputs"]["prompts"][0])
+# COMMAND ----------
+print(
+    trace["child_runs"][0]["child_runs"][0]["child_runs"][0]["outputs"]["generations"][
+        0
+    ][0]
+)
+print(
+    trace["child_runs"][0]["child_runs"][1]["child_runs"][0]["outputs"]["generations"][
+        0
+    ][0]
+)
+
+# COMMAND ----------

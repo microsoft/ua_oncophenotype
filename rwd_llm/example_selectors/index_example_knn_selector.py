@@ -1,7 +1,4 @@
-import collections
-import json
 import logging
-import re
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
@@ -19,9 +16,19 @@ from rwd_llm.chains.patient_history_grounded_answer_chain import (
 )
 from rwd_llm.utils import load_dataframe
 
-from .example_selector_utils import grounded_answer_memory_to_example
+from .example_selector_utils import (
+    grounded_answer_memory_to_example,
+    grounded_answer_to_example,
+)
 
 logger = logging.getLogger(__name__)
+
+
+def _anchor_relative_path(path: Union[str, Path], data_root_dir: Optional[str]) -> Path:
+    if not str(path).startswith("/") and data_root_dir is not None:
+        # relative paths are relative to the data_root_dir
+        path = Path(data_root_dir) / path
+    return Path(path)
 
 
 class IndexExampleKNNSelector(BaseExampleSelector):
@@ -36,7 +43,7 @@ class IndexExampleKNNSelector(BaseExampleSelector):
         memory_name: str,
         embedding_model_name: Union[str, Embeddings],
         query_text_input: str,
-        persist_path: Optional[str] = None,
+        persist_path: Optional[Union[str, Path]] = None,
         example_metadata_path: Optional[Union[pd.DataFrame, str]] = None,
         metadata_filter_col_map: Optional[Dict[str, str]] = None,
         id_column: str = "id",
@@ -44,7 +51,6 @@ class IndexExampleKNNSelector(BaseExampleSelector):
         filter_cols: Optional[List[str]] = None,
         example_patient_history_key: str = "patient_history",
         example_result_key: str = "result",
-        example_index_key: str = "evidence",
         build_index: bool = True,
         k: int = 5,
     ):
@@ -56,10 +62,6 @@ class IndexExampleKNNSelector(BaseExampleSelector):
         self.query_text_input = query_text_input
         self.example_patient_history_key = example_patient_history_key
         self.example_result_key = example_result_key
-
-        # example_index_key tells whether to build index on 'evidence' or
-        # 'patient_history' loaded from the memory
-        self.example_index_key = example_index_key
 
         # metadata_filter_col_map is a mapping from the column names in the metadata to
         # the input variables that should be used to filter the examples.
@@ -87,11 +89,15 @@ class IndexExampleKNNSelector(BaseExampleSelector):
         if metadata_df is not None:
             self.metadata = metadata_df.set_index(id_column)[filter_cols]
 
+        mem_dir = _anchor_relative_path(memory_dir, data_root_dir)
+
         if persist_path is not None:
+            persist_path = _anchor_relative_path(persist_path, data_root_dir)
+
             # store the chromadb locally and can be later loaded without building
             # (build_index == false)
             logger.info(f"ChromaDB persistence directory: {persist_path}")
-            chroma_client = chromadb.PersistentClient(path=persist_path)
+            chroma_client = chromadb.PersistentClient(path=str(persist_path))
         else:
             chroma_client = chromadb.Client()
 
@@ -110,7 +116,6 @@ class IndexExampleKNNSelector(BaseExampleSelector):
         )
 
         if build_index:
-            mem_dir = Path(memory_dir) if isinstance(memory_dir, str) else memory_dir
             self._build_index(mem_dir=mem_dir, memory_name=memory_name)
         else:
             if persist_path is None or self.collection.count() == 0:
@@ -135,7 +140,7 @@ class IndexExampleKNNSelector(BaseExampleSelector):
                         # if metadata is specified, only add examples if their
                         # corresponding metadata exist
                         try:
-                            text_metadata = self.metadata.loc[item_id].to_dict()
+                            text_metadata: dict = self.metadata.loc[item_id].to_dict()
                         except Exception:
                             continue
                     else:
@@ -148,19 +153,7 @@ class IndexExampleKNNSelector(BaseExampleSelector):
                         id_key="id",
                         patient_id=item_id,
                     )
-
-                    if self.example_index_key == "evidence":
-                        # build chroma collection indexed by the evidence
-                        result_dict = json.loads(example[self.example_result_key])
-                        item_evidences = [
-                            re.sub(r"([^\w\s]|_)+(?=\s|$)", "", item["evidence"]) + "."
-                            for item in result_dict["evidence"]
-                        ]
-                        text = " ".join(item_evidences)
-                    else:
-                        # build chroma collection indexed by summarized patient history
-                        text = example[self.example_patient_history_key]
-
+                    text = example[self.example_patient_history_key]
                     text_metadata.update(example)
 
                     # xxxx TODO: we can add text splitter if needed,
@@ -175,28 +168,19 @@ class IndexExampleKNNSelector(BaseExampleSelector):
         )
         return embeddings
 
-    def _grounded_answer_to_example(
-        self, p: PatientHistoryGroundedAnswer
-    ) -> Dict[str, str]:
-        patient_history = "Summarized Patient History:\n\n"
-        evidence_by_note_id = collections.defaultdict(list)
-        for evidence in p.evidence:
-            evidence_by_note_id[evidence.note_id].append(evidence.evidence)
-        for evidence in p.contradictory_evidence:
-            evidence_by_note_id[evidence.note_id].append(evidence.evidence)
-        for note_idx, (note_id, evidence) in enumerate(evidence_by_note_id.items()):
-            patient_history += f"Note ID: {note_idx}\n----------\n"
-            for e in evidence:
-                patient_history += f"  - {e}\n"
-        encoded_result = p.json()
-
-        return {
-            self.example_patient_history_key: patient_history,
-            self.example_result_key: encoded_result,
-        }
-
     def select_examples(self, input_variables: Dict[str, str]) -> List[dict]:
         query_text = input_variables[self.query_text_input]
+        if isinstance(query_text, PatientHistoryGroundedAnswer):
+            # Encode the PatientHistoryGroundedAnswer as an example and take the
+            # 'patient history' component as the query text. This ensures that the
+            # encoding of the query matches the encoding of the examples in the index.
+            temp_answer = grounded_answer_to_example(
+                query_text,
+                example_patient_history_key="patient_history",
+                example_result_key="result",
+            )
+            query_text = temp_answer["patient_history"]
+
         logger.debug(f"Query text: {query_text}")
 
         metadata_filter = {}
