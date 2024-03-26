@@ -1,5 +1,6 @@
 import collections
 import json
+import logging
 import re
 from pathlib import Path
 from typing import Dict, List, Optional, Union
@@ -19,6 +20,8 @@ from rwd_llm.chains.patient_history_grounded_answer_chain import (
 from rwd_llm.utils import load_dataframe
 
 from .example_selector_utils import grounded_answer_memory_to_example
+
+logger = logging.getLogger(__name__)
 
 
 class IndexExampleKNNSelector(BaseExampleSelector):
@@ -87,6 +90,7 @@ class IndexExampleKNNSelector(BaseExampleSelector):
         if persist_path is not None:
             # store the chromadb locally and can be later loaded without building
             # (build_index == false)
+            logger.info(f"ChromaDB persistence directory: {persist_path}")
             chroma_client = chromadb.PersistentClient(path=persist_path)
         else:
             chroma_client = chromadb.Client()
@@ -121,6 +125,7 @@ class IndexExampleKNNSelector(BaseExampleSelector):
         )
 
     def _build_index(self, mem_dir: Path, memory_name: str):
+        logger.info(f"Building index from memory directory: {mem_dir}")
         for item_dir in mem_dir.iterdir():
             if item_dir.is_dir():
                 key_file = item_dir / f"{memory_name}.json"
@@ -192,6 +197,7 @@ class IndexExampleKNNSelector(BaseExampleSelector):
 
     def select_examples(self, input_variables: Dict[str, str]) -> List[dict]:
         query_text = input_variables[self.query_text_input]
+        logger.debug(f"Query text: {query_text}")
 
         metadata_filter = {}
         for col in self.filter_cols:
@@ -203,9 +209,11 @@ class IndexExampleKNNSelector(BaseExampleSelector):
             except Exception:
                 continue
 
+        logger.debug(f"metadata_filter: {metadata_filter}")
         results: List[Document] = self.chroma.similarity_search(
             query=query_text, filter=metadata_filter, k=self.k
         )
+        logger.debug(f"results: {results}")
         # print("xxxx ---------------------------------------------------")
         # print(f"xxxx query: [{input_value}, {query_text}]")
         # print("xxxx results:")
