@@ -131,6 +131,7 @@ class IndexExampleKNNSelector(BaseExampleSelector):
 
     def _build_index(self, mem_dir: Path, memory_name: str):
         logger.info(f"Building index from memory directory: {mem_dir}")
+        n_memories_read = 0
         for item_dir in mem_dir.iterdir():
             if item_dir.is_dir():
                 key_file = item_dir / f"{memory_name}.json"
@@ -141,7 +142,16 @@ class IndexExampleKNNSelector(BaseExampleSelector):
                         # corresponding metadata exist
                         try:
                             text_metadata: dict = self.metadata.loc[item_id].to_dict()
-                        except Exception:
+                        except KeyError:
+                            logger.info(
+                                f"Not indexing example {item_id}, no metadata found"
+                            )
+                            continue
+                        except Exception as e:
+                            logger.warning(
+                                f"Not indexing example {item_id}, unknown error "
+                                f"retrieving metadata: {e}"
+                            )
                             continue
                     else:
                         text_metadata = {}
@@ -159,7 +169,9 @@ class IndexExampleKNNSelector(BaseExampleSelector):
                     # xxxx TODO: we can add text splitter if needed,
                     # xxxx       but so far we just load the entire texts without
                     # xxxx       splitting them into chunks.
+                    n_memories_read += 1
                     self.add_example(self.collection, text, text_metadata, item_id)
+        logger.info(f"Indexed {n_memories_read} examples")
 
     @staticmethod
     def _get_embeddings_model(model_name: str) -> AzureOpenAIEmbeddings:
