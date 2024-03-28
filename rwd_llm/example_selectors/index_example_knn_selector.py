@@ -206,9 +206,12 @@ class IndexExampleKNNSelector(BaseExampleSelector):
                 continue
 
         logger.debug(f"metadata_filter: {metadata_filter}")
-        results: List[Document] = self.chroma.similarity_search(
-            query=query_text, filter=metadata_filter, k=self.k
-        )
+        results: List[Document] = []
+        if self.k != 0:
+            # chroma throws an error with k=0, but it's useful for testing
+            results = self.chroma.similarity_search(
+                query=query_text, filter=metadata_filter, k=self.k
+            )
         logger.debug(f"results: {results}")
         # print("xxxx ---------------------------------------------------")
         # print(f"xxxx query: [{input_value}, {query_text}]")
