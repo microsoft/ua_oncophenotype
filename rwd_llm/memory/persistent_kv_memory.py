@@ -80,13 +80,13 @@ class PersistentMemoryProviderBase:
         return self.custom_serializers.get(key, self.default_serializer)
 
     def _get_deserializer(self, key: str) -> DeserializerType:
-        if key in self.custom_deserializers:
-            logger.debug(
-                f"using custom deserializer for {key}:"
-                f" {type(self.custom_deserializers[key])}"
-            )
-        else:
-            logger.debug(f"using default deserializer for {key}")
+        # if key in self.custom_deserializers:
+        #     logger.debug(
+        #         f"using custom deserializer for {key}:"
+        #         f" {type(self.custom_deserializers[key])}"
+        #     )
+        # else:
+        #     logger.debug(f"using default deserializer for {key}")
 
         return self.custom_deserializers.get(key, self.default_deserializer)
 
