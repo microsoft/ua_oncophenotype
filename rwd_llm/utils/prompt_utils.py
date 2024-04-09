@@ -4,19 +4,23 @@ from typing import Dict, List, Tuple
 from langchain.prompts import PromptTemplate
 
 
-def find_format_variables(s):
-    # This regex captures content between { and }, but avoids {{ or }}
-    pattern = re.compile(r"(?<!{){([^{}]+)}(?!})")
+def find_format_variables(s: str, jinja: bool = False) -> List[str]:
+    if jinja:
+        # This pattern captures content between {{ and }}
+        pattern = re.compile(r"{{([^{}]+)}}")
+    else:
+        # This regex captures content between { and }, but avoids {{ or }}
+        pattern = re.compile(r"(?<!{){([^{}]+)}(?!})")
     return pattern.findall(s)
 
 
 def get_prompt_from_message(
-    message: str, possible_partial_variables: Dict[str, str]
+    message: str, possible_partial_variables: Dict[str, str], jinja: bool = False
 ) -> Tuple[PromptTemplate, List[str]]:
     """Get a prompt from a message, using possible_partial_variables to inject
     partial variables into the prompt. Returns the prompt and a list of partial
     variables that were used."""
-    format_variables = find_format_variables(message)
+    format_variables = find_format_variables(message, jinja=jinja)
     partial_variables = {}
     for variable in possible_partial_variables:
         if variable in format_variables:
@@ -26,6 +30,7 @@ def get_prompt_from_message(
         template=message,
         input_variables=format_variables,
         partial_variables=partial_variables,
+        template_format="jinja2" if jinja else "f-string",
     )
     return prompt, list(partial_variables)
 

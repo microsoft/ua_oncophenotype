@@ -28,6 +28,7 @@ def chat_prompt_with_structured_output(
     example_input_vars: Optional[List[str]] = None,
     example_output_var: str = "result",
     example_indent: int = 2,
+    jinja: bool = False,
 ) -> ChatPromptTemplate:
     """
     Create a chat prompt with structured output and optional few-shot examples.
@@ -59,18 +60,22 @@ def chat_prompt_with_structured_output(
     # partial variables
     partial_variables = {format_instructions_variable: parser.get_format_instructions()}
     if preamble is not None:
-        template, _ = get_prompt_from_message(preamble, partial_variables)
+        template, _ = get_prompt_from_message(preamble, partial_variables, jinja=jinja)
         found_format_variables.extend(template.input_variables)
         msg = SystemMessagePromptTemplate(prompt=template)
         messages.append(msg)
 
     if instructions is not None:
-        template, _ = get_prompt_from_message(instructions, partial_variables)
+        template, _ = get_prompt_from_message(
+            instructions, partial_variables, jinja=jinja
+        )
         found_format_variables.extend(template.input_variables)
         msg = SystemMessagePromptTemplate(prompt=template)
         messages.append(msg)
 
-    question_template, _ = get_prompt_from_message(question, partial_variables)
+    question_template, _ = get_prompt_from_message(
+        question, partial_variables, jinja=jinja
+    )
     # add few shot examples
     if isinstance(examples, BaseExampleSelector):
         few_shot_prompt = FewShotChatMessagePromptTemplate(

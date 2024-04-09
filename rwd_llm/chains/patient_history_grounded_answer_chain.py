@@ -202,6 +202,7 @@ class PatientHistoryGroundedAnswerChain(LLMChain):
         example_input_vars: Optional[List[str]] = None,
         example_output_var: str = "result",
         example_indent: int = 2,
+        jinja: bool = False,
     ) -> "PatientHistoryGroundedAnswerChain":
         parser: PydanticOutputParser = DEFAULT_PARSER
         examples = examples or []  # ensure it's a list if empty
@@ -216,6 +217,7 @@ class PatientHistoryGroundedAnswerChain(LLMChain):
             example_input_vars=example_input_vars,
             example_output_var=example_output_var,
             example_indent=example_indent,
+            jinja=jinja,
         )
         return cls(
             prompt=prompt,
