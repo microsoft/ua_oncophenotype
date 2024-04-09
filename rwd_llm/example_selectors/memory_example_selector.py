@@ -1,20 +1,11 @@
-import collections
-import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from langchain_core.example_selectors.base import BaseExampleSelector
 import pandas as pd
-
-from rwd_llm.memory.persistent_kv_memory import SerializedMemoryValue
-from rwd_llm.memory import PickleDeserializer
+from langchain_core.example_selectors.base import BaseExampleSelector
 from rwd_llm.utils import load_dataframe
-from rwd_llm.chains.patient_history_grounded_answer_chain import (
-    PatientHistoryGroundedAnswer,
-)
-import re
 
-DESERIALIZER = PickleDeserializer()
+from .example_selector_utils import grounded_answer_memory_to_example
 
 
 class MemoryExampleSelector(BaseExampleSelector):
@@ -72,33 +63,13 @@ class MemoryExampleSelector(BaseExampleSelector):
                 key_file = item_dir / f"{memory_name}.json"
                 if key_file.exists():
                     item_id = item_dir.name
-                    obj = json.loads(key_file.read_text())
-                    memory = SerializedMemoryValue.parse_obj(obj)
-                    value: PatientHistoryGroundedAnswer = DESERIALIZER(memory.value)
-                    self.examples[str(item_id)] = self._grounded_answer_to_example(
-                        value
+                    self.examples[str(item_id)] = grounded_answer_memory_to_example(
+                        key_file,
+                        example_patient_history_key,
+                        example_result_key,
+                        id_key=id_column,
+                        patient_id=item_id,
                     )
-                
-
-    def _grounded_answer_to_example(
-        self, p: PatientHistoryGroundedAnswer
-    ) -> Dict[str, str]:
-        patient_history = "Summarized Patient History:\n\n"
-        evidence_by_note_id = collections.defaultdict(list)
-        for evidence in p.evidence:
-            evidence_by_note_id[evidence.note_id].append(evidence.evidence)
-        for evidence in p.contradictory_evidence:
-            evidence_by_note_id[evidence.note_id].append(evidence.evidence)
-        for note_idx, (note_id, evidence) in enumerate(evidence_by_note_id.items()):
-            patient_history += f"Note ID: {note_idx}\n----------\n"
-            for e in evidence:
-                patient_history += f"  - {e}\n"
-        encoded_result = p.json()
-
-        return {
-            self.example_patient_history_key: patient_history,
-            self.example_result_key: encoded_result,
-        }
 
     def select_examples(self, input_variables: Dict[str, str]) -> List[dict]:
         example_ids = []

@@ -6,9 +6,7 @@ _target_: "rwd_llm.chains.IndexChain.from_openai_llm"
 preamble: >
   You are an AI assistant trained to answer questions based on source documents.
 question: "Does this patient experience abdominal pain?"
-llm_class: 
-  _target_: "hydra.utils.get_class"
-  path: "langchain_community.chat_models.AzureChatOpenAI"
+llm: ${llm} 
 query: "abdominal or stomach"
 search_mode: "similarity"
 k: 3

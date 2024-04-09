@@ -80,13 +80,13 @@ class PersistentMemoryProviderBase:
         return self.custom_serializers.get(key, self.default_serializer)
 
     def _get_deserializer(self, key: str) -> DeserializerType:
-        if key in self.custom_deserializers:
-            logger.debug(
-                f"using custom deserializer for {key}:"
-                f" {type(self.custom_deserializers[key])}"
-            )
-        else:
-            logger.debug(f"using default deserializer for {key}")
+        # if key in self.custom_deserializers:
+        #     logger.debug(
+        #         f"using custom deserializer for {key}:"
+        #         f" {type(self.custom_deserializers[key])}"
+        #     )
+        # else:
+        #     logger.debug(f"using default deserializer for {key}")
 
         return self.custom_deserializers.get(key, self.default_deserializer)
 
@@ -190,10 +190,12 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
             default_deserializer=default_deserializer,
         )
 
+        logger.info(f"loading memories from input dir '{input_dir}'")
         if input_dir:
             ids_to_initialize = None
             if dataset is not None:
                 ids_to_initialize = set([ob.id for ob in dataset])
+            logger.info(f"loading memories from {input_dir}")
             fmp._load_memories(
                 input_dir=Path(input_dir),
                 item_ids=ids_to_initialize,
@@ -223,6 +225,7 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
     ):
         """Load memories from persistence_dir into the memory cache."""
         input_persistence_dir = Path(input_dir)
+        logger.debug(f"loading memories from {input_dir}")
         ids_to_initialize = set()
         if item_ids is None:
             for file in input_persistence_dir.iterdir():
@@ -231,6 +234,7 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
         else:
             ids_to_initialize.update(item_ids)
 
+        logger.debug(f"loading memories for {len(ids_to_initialize)} items")
         for item_id in ids_to_initialize:
             item_dir: Path = input_persistence_dir / item_id
             keys_to_load = set()
