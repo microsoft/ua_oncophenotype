@@ -10,10 +10,13 @@ from .few_shot_chain import FewShotChain
 from .fixed_output_chain import FixedOutputChain
 from .index_chain import IndexChain
 from .map_documents import MapDocumentsChain
-from .mapping_chain import MappingChain
+from .mapping_chain import MappingChain, DataframeMappingChain
 from .no_op_chain import NoOpChain
 from .note_formatter_chain import NoteFormatterChain
 from .patient_history_grounded_answer_chain import PatientHistoryGroundedAnswerChain
+from .patient_history_grounded_answer_example_formatter import (
+    PatientHistoryGroundedAnswerExampleFormatter,
+)
 from .question_with_structured_output import chat_prompt_with_structured_output
 from .retrieval_chain import RetrievalAndClassificationChain, RetrievalChain
 from .self_inspection_chain import SelfInspectionChain
@@ -26,6 +29,7 @@ __all__ = [
     "CategoricalRoutingChain",
     "ChainNode",
     "ChatEvidenceChain",
+    "DataframeMappingChain",
     "DocumentFilterChain",
     "EvidenceChain",
     "EvidenceCoTChain",
@@ -39,6 +43,7 @@ __all__ = [
     "NoOpChain",
     "NoteFormatterChain",
     "PatientHistoryGroundedAnswerChain",
+    "PatientHistoryGroundedAnswerExampleFormatter",
     "RetrievalChain",
     "RetrievalAndClassificationChain",
     "SelfInspectionChain",

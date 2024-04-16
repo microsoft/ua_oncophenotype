@@ -18,6 +18,8 @@ def load_dataframe(
         df = pd.read_csv(dataframe_path)
     elif file_ext.lower() == ".tsv":
         df = pd.read_csv(dataframe_path, sep="\t")
+    elif file_ext.lower() == ".jsonl" or file_ext.lower() == "":
+        df = pd.read_json(dataframe_path, dtype=False, lines=True)
     else:
         raise ValueError(f"Unrecognized file extension: {file_ext}")
 
