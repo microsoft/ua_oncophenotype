@@ -22,8 +22,8 @@ def print_trace(run, indent_level=0, cidx=0):
     next_indent = "  " * (indent_level + 1)
     name = run["name"]
     children = run["child_runs"]
-    inputs = list(run["inputs"].keys())
-    outputs = list(run["outputs"].keys())
+    inputs = list(run["inputs"].keys()) if run.get("inputs", None) else []
+    outputs = list(run["outputs"].keys()) if run.get("outputs", None) else []
     print(f"{indent}{cidx} - {name}:")
     print(f"{next_indent}inputs: {inputs}")
     print(f"{next_indent}outputs: {outputs}")

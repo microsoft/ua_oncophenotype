@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+import shutil
 from typing import Dict, List, Optional, Union
 
 import chromadb
@@ -97,6 +98,11 @@ class IndexExampleKNNSelector(BaseExampleSelector):
             # store the chromadb locally and can be later loaded without building
             # (build_index == false)
             logger.info(f"ChromaDB persistence directory: {persist_path}")
+            if build_index:
+                logger.info(
+                    f"Removing existing index before rebuilding: {persist_path}"
+                )
+                shutil.rmtree(persist_path)
             chroma_client = chromadb.PersistentClient(path=str(persist_path))
         else:
             chroma_client = chromadb.Client()
@@ -197,12 +203,14 @@ class IndexExampleKNNSelector(BaseExampleSelector):
 
         metadata_filter = {}
         for col in self.filter_cols:
+            logger.debug(f"looking for metadata: {col}")
             try:
                 input_value = input_variables[
                     self.metadata_filter_col_map.get(col, col)
                 ]
                 metadata_filter[col] = input_value
-            except Exception:
+            except Exception as e:
+                logger.warning(f"error looking up metadata {col}: {repr(e)}")
                 continue
 
         logger.debug(f"metadata_filter: {metadata_filter}")
