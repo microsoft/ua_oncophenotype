@@ -10,7 +10,7 @@ from .few_shot_chain import FewShotChain
 from .fixed_output_chain import FixedOutputChain
 from .index_chain import IndexChain
 from .map_documents import MapDocumentsChain
-from .mapping_chain import MappingChain, DataframeMappingChain
+from .mapping_chain import DataframeMappingChain, MappingChain
 from .no_op_chain import NoOpChain
 from .note_formatter_chain import NoteFormatterChain
 from .patient_history_grounded_answer_chain import PatientHistoryGroundedAnswerChain

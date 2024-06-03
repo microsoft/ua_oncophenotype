@@ -1,9 +1,8 @@
 from typing import Any, Dict, List, Optional
 
+import pandas as pd
 from langchain.chains.base import Chain
 from langchain.pydantic_v1 import Field
-
-import pandas as pd
 
 from ..utils import load_dataframe
 
