@@ -13,8 +13,13 @@ def _get_var(var: str, raise_error: bool = True) -> Optional[str]:
     return val
 
 
+class OpenAIConfigBase:
+    def setup_openai(self):
+        raise NotImplementedError("setup_openai must be implemented in subclass")
+
+
 @dataclass
-class OpenAIConfig:
+class OpenAIConfig(OpenAIConfigBase):
     api_base: str
     api_version: str
     api_key: str
