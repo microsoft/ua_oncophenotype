@@ -17,8 +17,8 @@ setup(
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*"]),
     install_requires=[
         "hydra-core>=1.3",
-        "chromadb==0.4.3",
-        "langchain==0.1.11",
+        "chromadb==0.6.3",
+        "langchain==0.3.18",
         "openai>=1.0",
         "tiktoken>0.3",
         "haikunator>=2.1",

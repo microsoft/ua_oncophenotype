@@ -8,7 +8,8 @@ dependencies:
   - python=3.9
   - pip
   - wheel
-  - langchain==0.2.17
+  - langchain==0.3.18
+  - chromadb==0.6.3
   - pip:
     - azure_identity
     - hydra-core
