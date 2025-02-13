@@ -1,0 +1,22 @@
+# conda env create -f rwd_v2.yml
+# upgrading to langchain v0.2.17
+name: rwd_v2
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pip
+  - wheel
+  - langchain==0.2.17
+  - pip:
+    - azure_identity
+    - hydra-core
+    - num2words
+    - langchain-openai
+    - openai
+    - tiktoken
+    - haikunator>=2.1
+    - mlflow>=2.6
+    - pandas
+    - scikit-learn
