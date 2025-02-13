@@ -2,9 +2,9 @@ import logging
 import uuid
 from typing import Any, Dict, List, Optional
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
-from langchain.pydantic_v1 import BaseModel, validator
+from langchain_core.callbacks import CallbackManagerForChainRun
+from pydantic import BaseModel, field_validator, model_validator
 
 from ..memory import EphemeralMemoryProvider, PersistentMemoryProviderBase
 
@@ -23,7 +23,8 @@ class ChainNode(BaseModel):
     # Key to use to pass the label to the next chain; None means don't pass it.
     label_next_input_key: Optional[str] = None
 
-    @validator("children")
+    @field_validator("children")
+    @classmethod
     def _validate_children(cls, children):
         if not children:
             return None
@@ -40,21 +41,23 @@ class ChainNode(BaseModel):
             children[DEFAULT_LABEL] = default_chain
         return children
 
-    @validator("label_output_key", always=True)
-    def _validate_label_output_key(cls, label_output_key, values):
+    @model_validator(mode="before")
+    def _validate_label_output_key(cls, data):
+        label_output_key = data.get("label_output_key")
         if label_output_key is None:
-            chain: Chain = values["chain"]
+            chain: Chain = data["chain"]
             chain_output_keys = chain.output_keys
             label_output_key = chain_output_keys[0]
             if len(chain_output_keys) > 1:
-                if values.get("children"):
+                if data.get("children"):
                     # this isn't a leaf node, so should probably have label_output_key
                     # explicitly set
                     logger.warning(
-                        f"Chain {values['name']} has multiple output keys. "
+                        f"Chain {data['name']} has multiple output keys. "
                         f"Using {chain_output_keys[0]} as the label output key."
                     )
-        return label_output_key
+        data["label_output_key"] = label_output_key
+        return data
 
     @property
     def label_key(self) -> str:
@@ -84,7 +87,8 @@ class CategoricalRoutingChain(Chain):
     memorized_keys: Optional[List[str]] = None
     item_id_key: Optional[str] = None
 
-    @validator("persistent_memory_provider", pre=True)
+    @field_validator("persistent_memory_provider", mode="before")
+    @classmethod
     def _validate_persistent_memory_provider(cls, persistent_memory_provider):
         logger.info(
             "Validation: persistent_memory_provider is"

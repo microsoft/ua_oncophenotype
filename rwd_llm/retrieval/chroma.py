@@ -9,10 +9,10 @@ import uuid
 from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Tuple, Type
 
 import numpy as np
-from langchain.docstore.document import Document
-from langchain.embeddings.base import Embeddings
-from langchain.vectorstores.base import VectorStore
-from langchain.vectorstores.utils import maximal_marginal_relevance
+from langchain_community.vectorstores.utils import maximal_marginal_relevance
+from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
+from langchain_core.vectorstores import VectorStore
 
 if TYPE_CHECKING:
     import chromadb

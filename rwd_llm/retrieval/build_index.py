@@ -3,9 +3,9 @@ from typing import Dict, Iterable, Tuple, Union
 
 import openai
 import pandas as pd
-from langchain.embeddings.base import Embeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.embeddings import Embeddings
 from langchain_openai import AzureOpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from openai import RateLimitError
 from rwd_llm.data_loaders.data_loaders_base import DatasetBase
 from rwd_llm.dtypes.dtypes import BaseObject, ClinicalNote, Patient

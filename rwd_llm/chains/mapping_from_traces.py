@@ -3,7 +3,8 @@ import json
 import os
 from typing import Dict, List, Optional
 
-from langchain.schema import BaseMemory, Document
+from langchain_core.documents import Document
+from langchain_core.memory import BaseMemory
 
 from ..utils import get_by_path
 from .mapping_chain import MappingChain
@@ -21,19 +22,21 @@ class SummaryDeserializer:
 def parse_summarized_doc_from_dict(summarized_doc_dict: dict) -> Document:
     summarized_doc = Document(**summarized_doc_dict)
     structured_summary_dict = summarized_doc.metadata["summary"]
+    doc_id = summarized_doc.metadata["id"]
     summarized_doc.metadata["summary"] = parse_summary_from_dict(
-        structured_summary_dict
+        structured_summary_dict, doc_id
     )
     return summarized_doc
 
 
-def parse_summary_from_dict(summary_dict: dict) -> Summary:
+def parse_summary_from_dict(summary_dict: dict, doc_id: str) -> Summary:
     """Convert a summary dict to a Summary object. We need to manually convert
     ParsedSummaryEvidence"""
     summary_dict = copy.deepcopy(summary_dict)
     for finding_dict in summary_dict["findings"]:
         evidence = []
         for evidence_dict in finding_dict["evidence"]:
+            evidence_dict["doc_id"] = doc_id
             evidence.append(ParsedSummaryEvidence(**evidence_dict))
         finding_dict["evidence"] = evidence
     return Summary(**summary_dict)

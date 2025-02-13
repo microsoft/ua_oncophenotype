@@ -1,6 +1,6 @@
 import textwrap
 
-from langchain.schema import Document
+from langchain_core.documents import Document
 from rwd_llm.dtypes import ClinicalNote
 from rwd_llm.tests.utils import FakeLLM
 
@@ -52,7 +52,7 @@ def test_zero_shot_usage():
             for finding in findings
         ],
     )
-    FakeLLM.set_answers([expected_answer.json()])
+    FakeLLM.set_answers([expected_answer.model_dump_json()])
     llm = FakeOpenAILLM(model_name="gpt-4")
 
     chain = StructuredDocumentSummaryChain.from_openai_llm(
@@ -159,8 +159,8 @@ def test_few_shot_usage():
             },
         },
     ]
-    Summary.parse_obj(examples[1]["result"])
-    FakeLLM.set_answers([expected_answer.json()])
+    Summary.model_validate(examples[1]["result"])
+    FakeLLM.set_answers([expected_answer.model_dump_json()])
     llm = FakeOpenAILLM(model_name="gpt-4")
 
     chain = StructuredDocumentSummaryChain.from_openai_llm(

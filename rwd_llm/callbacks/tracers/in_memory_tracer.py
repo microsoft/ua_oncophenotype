@@ -1,7 +1,6 @@
 from typing import Dict, Optional
 
-from langchain.callbacks.tracers.base import BaseTracer
-from langchain.callbacks.tracers.schemas import Run
+from langchain_core.tracers import BaseTracer, Run
 
 
 class InMemoryTracer(BaseTracer):

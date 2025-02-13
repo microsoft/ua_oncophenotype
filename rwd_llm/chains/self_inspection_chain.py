@@ -2,13 +2,16 @@ import logging
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 
-from langchain.callbacks.base import BaseCallbackHandler, BaseCallbackManager
-from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.chains import LLMChain
 from langchain.chains.base import Chain
-from langchain.prompts import PromptTemplate
-from langchain.schema.messages import BaseMessage
-from langchain.schema.output import LLMResult
+from langchain.chains.llm import LLMChain
+from langchain_core.callbacks import (
+    BaseCallbackHandler,
+    BaseCallbackManager,
+    CallbackManagerForChainRun,
+)
+from langchain_core.messages import BaseMessage
+from langchain_core.outputs import LLMResult
+from langchain_core.prompts import PromptTemplate
 
 logger = logging.getLogger(__name__)
 

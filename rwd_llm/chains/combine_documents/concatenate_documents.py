@@ -2,11 +2,9 @@ from typing import Any, List, Optional, Tuple
 
 from langchain.callbacks.manager import Callbacks
 from langchain.chains.combine_documents.base import BaseCombineDocumentsChain
-from langchain.docstore.document import Document
-from langchain.prompts.prompt import PromptTemplate
-from langchain.pydantic_v1 import Extra, Field
-from langchain.schema import format_document
-from langchain.schema.prompt_template import BasePromptTemplate
+from langchain_core.documents import Document
+from langchain_core.prompts import BasePromptTemplate, PromptTemplate, format_document
+from pydantic import ConfigDict, Field
 
 
 def _get_default_document_prompt() -> PromptTemplate:
@@ -27,12 +25,7 @@ class ConcatenateDocuments(BaseCombineDocumentsChain):
     """The key to use in the metadata to store the document index."""
     sort_by: Optional[str] = None
     """Optional metadata field to sort the documents by"""
-
-    class Config:
-        """Configuration for this pydantic object."""
-
-        extra = Extra.forbid
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)
 
     def _combine_docs(self, docs: List[Document]) -> str:
         if self.sort_by is not None:

@@ -2,11 +2,8 @@ import collections
 import logging
 from typing import Any, Dict, List, Optional
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.chains.loading import type_to_loader_dict
-from langchain.llms.loading import load_llm, load_llm_from_config
-from langchain.prompts.loading import load_prompt, load_prompt_from_config
-from langchain.schema import Generation
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_core.outputs import Generation
 from rwd_llm.chains.categorical_chain import CategoricalChain
 
 logger = logging.getLogger(__name__)
@@ -64,35 +61,3 @@ class LLMConsistencyChain(CategoricalChain):
     @property
     def _chain_type(self) -> str:
         return LLM_CONSISTENCY_CHAIN_TYPE
-
-
-def _load_consistency_chain(config: dict, **kwargs: Any) -> LLMConsistencyChain:
-    if "llm" in config:
-        llm_config = config.pop("llm")
-        llm = load_llm_from_config(llm_config)
-    elif "llm_path" in config:
-        llm = load_llm(config.pop("llm_path"))
-    else:
-        raise ValueError("One of `llm` or `llm_path` must be present.")
-    if "prompt" in config:
-        prompt_config = config.pop("prompt")
-        prompt = load_prompt_from_config(prompt_config)
-    elif "prompt_path" in config:
-        prompt = load_prompt(config.pop("prompt_path"))
-    else:
-        raise ValueError("One of `prompt` or `prompt_path` must be present.")
-
-    if "stop" not in config:
-        raise ValueError("Must specify `stop`.")
-    stop = config.pop("stop")
-
-    return LLMConsistencyChain(
-        stop=stop,
-        prompt=prompt,
-        llm=llm,
-        **config,
-    )
-
-
-# hack to register the chain type
-type_to_loader_dict[LLM_CONSISTENCY_CHAIN_TYPE] = _load_consistency_chain

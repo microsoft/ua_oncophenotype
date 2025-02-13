@@ -1,5 +1,5 @@
-from langchain.chains import LLMChain
-from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
+from langchain.chains.llm import LLMChain
+from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from rwd_llm.tests.utils import FakeLLM
 
 from ..self_inspection_chain import SelfInspectionChain

@@ -1,4 +1,4 @@
-from langchain.pydantic_v1 import BaseModel
+from pydantic import BaseModel
 from rwd_llm.example_selectors import InputExampleSelector
 from rwd_llm.output_parsers import PydanticOutputParserWithExamples
 
@@ -26,7 +26,7 @@ def get_examples():
             "question": "What is the answer to life, the universe, and everything?",
             "response": MyStructuredOutput(
                 reasoning="Because Douglas Adams said so.", confidence=5, answer="42"
-            ).dict(),
+            ).model_dump(),
         },
     ]
 

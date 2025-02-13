@@ -2,14 +2,14 @@ import logging
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import tiktoken
-from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.chains import LLMChain
-from langchain.llms.openai import BaseOpenAI
-from langchain.pydantic_v1 import validator
-from langchain.schema import PromptValue
-from langchain.schema.prompt_template import BasePromptTemplate
-from langchain.text_splitter import TokenTextSplitter
-from langchain_community.chat_models import ChatOpenAI
+from langchain.chains.llm import LLMChain
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_core.prompt_values import PromptValue
+from langchain_core.prompts import BasePromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_openai.llms.base import BaseOpenAI
+from langchain_text_splitters import TokenTextSplitter
+from pydantic import model_validator
 
 logger = logging.getLogger(__name__)
 
@@ -116,10 +116,9 @@ class TruncatingLLMChain(LLMChain):
     truncation_message: Optional[str] = None
     truncator: Optional[OpenAIDocumentTruncator] = None
 
-    @validator("doc_key", always=True)
-    def set_doc_key(cls, doc_key: Optional[str], values: Dict[str, Any]) -> str:
+    @classmethod
+    def _set_doc_key(cls, doc_key: Optional[str], prompt: BasePromptTemplate) -> str:
         if doc_key is None:
-            prompt: BasePromptTemplate = values["prompt"]
             if len(prompt.input_variables) == 1:
                 doc_key = prompt.input_variables[0]
             else:
@@ -129,21 +128,23 @@ class TruncatingLLMChain(LLMChain):
                 )
         return doc_key
 
-    @validator("truncator", always=True)
-    def set_truncator(
-        cls, truncator: Optional[OpenAIDocumentTruncator], values: Dict[str, Any]
-    ) -> OpenAIDocumentTruncator:
-        llm: Union[BaseOpenAI, ChatOpenAI] = values["llm"]
-        template: BasePromptTemplate = values["prompt"]
+    @model_validator(mode="before")
+    def set_truncator(cls, data: Dict[str, Any]) -> dict:
+        truncator: Optional[OpenAIDocumentTruncator] = data.get("truncator")
+        llm: Union[BaseOpenAI, ChatOpenAI] = data["llm"]
+        template: BasePromptTemplate = data["prompt"]
+        truncation_message: Optional[str] = data.get("truncation_message")
+        doc_key: str = cls._set_doc_key(data.get("doc_key"), template)
 
         if truncator is None:
             truncator = OpenAIDocumentTruncator(
                 model_name=llm.model_name,
                 template=template,
-                truncation_message=values["truncation_message"],
-                doc_key=values["doc_key"],
+                truncation_message=truncation_message,
+                doc_key=doc_key,
             )
-        return truncator
+        data["truncator"] = truncator
+        return data
 
     def get_doc_key(self) -> str:
         if self.doc_key is None:

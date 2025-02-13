@@ -5,9 +5,9 @@ import pprint
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
-from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains.base import Chain
-from langchain.schema import BaseMemory
+from langchain_core.callbacks import BaseCallbackHandler
+from langchain_core.memory import BaseMemory
 from rwd_llm.data_loaders.data_loaders_base import DatasetBase
 from rwd_llm.dtypes import force_to_json
 from rwd_llm.eval.eval import Evaluation

@@ -1,9 +1,9 @@
 from typing import Any, Dict, List, Optional
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
-from langchain.pydantic_v1 import validator
-from langchain.schema import Document
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_core.documents import Document
+from pydantic import model_validator
 
 
 class MapDocumentsChain(Chain):
@@ -25,12 +25,11 @@ class MapDocumentsChain(Chain):
     text_only: bool = False
     """If True, will only pass the text of the document to the chain."""
 
-    @validator("doc_chain_doc_input_key", always=True)
-    def find_doc_input_key(
-        cls, doc_chain_doc_input_key: Optional[str], values: Dict[str, Any]
-    ) -> str:
+    @model_validator(mode="before")
+    def find_doc_input_key(cls, data: Dict[str, Any]) -> dict:
+        doc_chain_doc_input_key = data.get("doc_chain_doc_input_key")
         if doc_chain_doc_input_key is None:
-            doc_chain = values["doc_chain"]
+            doc_chain = data["doc_chain"]
             if len(doc_chain.input_keys) > 1:
                 raise ValueError(
                     "doc_chain has multiple input keys, please specify doc_input_key:"
@@ -39,7 +38,8 @@ class MapDocumentsChain(Chain):
             key = doc_chain.input_keys[0]
         else:
             key = doc_chain_doc_input_key
-        return key
+        data["doc_chain_doc_input_key"] = key
+        return data
 
     @property
     def doc_input_key(self) -> str:
@@ -49,12 +49,11 @@ class MapDocumentsChain(Chain):
             )
         return self.doc_chain_doc_input_key
 
-    @validator("doc_chain_doc_output_key", always=True)
-    def find_doc_output_key(
-        cls, doc_chain_doc_output_key: Optional[str], values: Dict[str, Any]
-    ) -> str:
+    @model_validator(mode="before")
+    def find_doc_output_key(cls, data: Dict[str, Any]) -> dict:
+        doc_chain_doc_output_key = data.get("doc_chain_doc_output_key")
         if doc_chain_doc_output_key is None:
-            doc_chain = values["doc_chain"]
+            doc_chain = data["doc_chain"]
             if len(doc_chain.output_keys) > 1:
                 raise ValueError(
                     "doc_chain has multiple output keys, please specify doc_output_key:"
@@ -63,7 +62,8 @@ class MapDocumentsChain(Chain):
             key = doc_chain.output_keys[0]
         else:
             key = doc_chain_doc_output_key
-        return key
+        data["doc_chain_doc_output_key"] = key
+        return data
 
     @property
     def doc_output_key(self) -> str:
@@ -96,7 +96,7 @@ class MapDocumentsChain(Chain):
             doc_chain_inputs = [{self.doc_input_key: doc} for doc in docs]
 
         callbacks = _run_manager.get_child()
-        results = self.doc_chain.apply(
+        results = self.doc_chain.batch(
             # FYI - this is parallelized and so it is fast.
             doc_chain_inputs,
             callbacks=callbacks,

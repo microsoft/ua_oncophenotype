@@ -1,8 +1,8 @@
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
-from langchain.schema import Document
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_core.documents import Document
 
 from ..map_documents import MapDocumentsChain
 

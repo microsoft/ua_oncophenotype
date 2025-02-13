@@ -1,8 +1,7 @@
 from typing import List
 
 from attr import dataclass
-from langchain.prompts import FewShotPromptTemplate
-from langchain.prompts.prompt import PromptTemplate
+from langchain_core.prompts import FewShotPromptTemplate, PromptTemplate
 
 
 @dataclass

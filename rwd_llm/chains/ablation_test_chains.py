@@ -6,12 +6,12 @@ evidence or evidence+reasonong.
 import logging
 from typing import Any, Dict, List, Optional, Union, cast
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.llm import LLMChain
-from langchain.output_parsers import PydanticOutputParser
-from langchain.pydantic_v1 import BaseModel, Field, validator
-from langchain.schema import BaseMemory
-from langchain_community.chat_models import ChatOpenAI
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_core.memory import BaseMemory
+from langchain_core.output_parsers import PydanticOutputParser
+from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field, field_validator, model_validator
 from rwd_llm.output_parsers import PydanticOutputParserWithExamples
 
 from .categorical_chain import normalize_label_mapping, parse_output
@@ -46,26 +46,29 @@ class AnswerChainNoEvidence(LLMChain):
     label_mapping: Optional[Union[List[str], Dict[str, str]]] = None
     parser: PydanticOutputParser = DEFAULT_REASONING_PARSER
 
-    @validator("patient_history_key", always=True)
-    def _get_patient_history_key(cls, patient_history_key, values) -> str:
+    @model_validator(mode="before")
+    def _get_patient_history_key(cls, data) -> str:
+        patient_history_key = data.get("patient_history_key")
         # if there is only one input to the prompt, use it as the patient history key
         if patient_history_key is None:
-            if len(values["prompt"].input_variables) == 1:
-                patient_history_key = values["prompt"].input_variables[0]
+            if len(data["prompt"].input_variables) == 1:
+                patient_history_key = data["prompt"].input_variables[0]
             else:
                 raise ValueError(
                     "patient_history_key must be specified if there are multiple inputs"
                     " to the prompt"
                 )
         else:
-            if patient_history_key not in values["prompt"].input_variables:
+            if patient_history_key not in data["prompt"].input_variables:
                 raise ValueError(
                     f"patient_history_key {patient_history_key} not found in prompt"
                     " input_variables"
                 )
-        return patient_history_key
+        data["patient_history_key"] = patient_history_key
+        return data
 
-    @validator("label_mapping")
+    @field_validator("label_mapping")
+    @classmethod
     def _normalize_label_mapping(cls, label_mapping):
         # make sure label mapping is a dict with lowercase keys
         if label_mapping:
@@ -190,26 +193,29 @@ class AnswerOnlyChain(LLMChain):
     label_mapping: Optional[Union[List[str], Dict[str, str]]] = None
     parser: PydanticOutputParser = DEFAULT_ANSWER_ONLY_PARSER
 
-    @validator("patient_history_key", always=True)
-    def _get_patient_history_key(cls, patient_history_key, values) -> str:
+    @model_validator(mode="before")
+    def _get_patient_history_key(cls, data) -> str:
+        patient_history_key = data.get("patient_history_key")
         # if there is only one input to the prompt, use it as the patient history key
         if patient_history_key is None:
-            if len(values["prompt"].input_variables) == 1:
-                patient_history_key = values["prompt"].input_variables[0]
+            if len(data["prompt"].input_variables) == 1:
+                patient_history_key = data["prompt"].input_variables[0]
             else:
                 raise ValueError(
                     "patient_history_key must be specified if there are multiple inputs"
                     " to the prompt"
                 )
         else:
-            if patient_history_key not in values["prompt"].input_variables:
+            if patient_history_key not in data["prompt"].input_variables:
                 raise ValueError(
                     f"patient_history_key {patient_history_key} not found in prompt"
                     " input_variables"
                 )
-        return patient_history_key
+        data["patient_history_key"] = patient_history_key
+        return data
 
-    @validator("label_mapping")
+    @field_validator("label_mapping")
+    @classmethod
     def _normalize_label_mapping(cls, label_mapping):
         # make sure label mapping is a dict with lowercase keys
         if label_mapping:

@@ -1,14 +1,10 @@
 import os
 from typing import Optional
 
-import pytest
 import tiktoken
-from langchain.chains import LLMChain
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
-from rwd_llm.dtypes.dtypes import ClinicalNote
+from langchain_core.prompts import PromptTemplate
+from langchain_openai.llms import OpenAI
 from rwd_llm.retrieval.retrieval_utils import build_and_get_index
-from rwd_llm.tests.utils import FakeLLM
 
 from ..truncating_llm_chain import OPENAI_MODEL_TOKEN_MAPPING, TruncatingLLMChain
 

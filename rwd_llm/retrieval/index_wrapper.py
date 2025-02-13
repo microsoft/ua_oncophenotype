@@ -1,7 +1,7 @@
 import os
 from typing import Dict, Optional
 
-from langchain.vectorstores.base import VectorStore
+from langchain_core.vectorstores import VectorStore
 from langchain_openai import AzureOpenAIEmbeddings
 
 from .chroma import Chroma

@@ -18,7 +18,7 @@ def test_normal_usage():
         evidence=[PatientHistoryEvidence(note_id="0", evidence="First note.")],
         contradictory_evidence=[],
     )
-    FakeLLM.set_answers([expected_answer.json()])
+    FakeLLM.set_answers([expected_answer.model_dump_json()])
     llm = FakeLLM()
 
     # set up the chain
@@ -109,7 +109,7 @@ def test_jinja_template_usage():
         evidence=[PatientHistoryEvidence(note_id="0", evidence="First note.")],
         contradictory_evidence=[],
     )
-    FakeLLM.set_answers([expected_answer.json()])
+    FakeLLM.set_answers([expected_answer.model_dump_json()])
     llm = FakeLLM()
 
     # set up the chain

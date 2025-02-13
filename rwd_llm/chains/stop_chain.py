@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.chains import LLMChain
+from langchain.chains.llm import LLMChain
+from langchain_core.callbacks import CallbackManagerForChainRun
 
 
 class LLMStopChain(LLMChain):

@@ -2,7 +2,7 @@
     "_target_": "rwd_llm.chains.EvidenceChain.from_openai_llm",
     "preamble": "\nYou are an AI assistant trained to answer questions based on source documents. If you\nare unsure of the correct answer, you should answer \"Unsure\", but provide the relevant\nevidence text to the \"Unsure\" decision.\n",
     "question": "What is the patient's favorite color?",
-    "llm_class": {"_target_": "hydra.utils.get_class", "path": "langchain.llms.AzureOpenAI"},
+    "llm_class": {"_target_": "hydra.utils.get_class", "path": "langchain_openai.AzureOpenAI"},
     "llm_extra_args": { "model_name": "text-davinci-003", "deployment_name": "text-davinci-003"},
     "answer_mapping": ["red", "blue", "yellow", "purple", "white", "black", "green", "Unsure"],
     "examples": [

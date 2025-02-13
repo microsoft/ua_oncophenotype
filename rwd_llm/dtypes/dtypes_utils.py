@@ -3,7 +3,7 @@ import logging
 from typing import List
 from uuid import UUID
 
-from langchain.pydantic_v1 import BaseModel
+from pydantic import BaseModel
 from rwd_llm.dtypes.dtypes import BaseObject, ClinicalNote
 
 logger = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ def force_to_json(json_ob):
     elif isinstance(json_ob, BaseObject):
         return force_to_json(json_ob.to_dict())
     elif isinstance(json_ob, BaseModel):
-        return force_to_json(json_ob.dict())
+        return force_to_json(json_ob.model_dump())
     elif json_ob is None:
         return None
     else:

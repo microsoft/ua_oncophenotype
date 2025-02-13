@@ -1,7 +1,7 @@
 import re
 from typing import Dict, List, Tuple
 
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 
 
 def find_format_variables(s: str, jinja: bool = False) -> List[str]:

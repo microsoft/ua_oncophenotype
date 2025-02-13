@@ -69,7 +69,7 @@ def grounded_answer_to_example(
         for e in evidence:
             patient_history += f"  - {e}\n"
     p = _to_unparsed_patient_history(p, note_id_to_idx)
-    encoded_result = p.json()
+    encoded_result = p.model_dump_json()
 
     example = {
         example_patient_history_key: patient_history,
@@ -88,7 +88,7 @@ def grounded_answer_memory_to_example(
     patient_id: Optional[str] = None,
 ) -> Dict[str, str]:
     obj = json.loads(memory_file.read_text())
-    memory = SerializedMemoryValue.parse_obj(obj)
+    memory = SerializedMemoryValue.model_validate(obj)
     value: PatientHistoryGroundedAnswer = DESERIALIZER(memory.value)
     return grounded_answer_to_example(
         value,

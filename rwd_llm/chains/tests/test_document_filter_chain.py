@@ -1,4 +1,4 @@
-from langchain.docstore.document import Document
+from langchain_core.documents import Document
 
 from ..document_filter_chain import DocumentFilterChain
 

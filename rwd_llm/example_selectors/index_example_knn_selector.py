@@ -7,6 +7,7 @@ import chromadb
 import openai
 import pandas as pd
 from chromadb.api.models.Collection import Collection
+from chromadb.api.types import Embeddable, EmbeddingFunction
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
@@ -30,6 +31,14 @@ def _anchor_relative_path(path: Union[str, Path], data_root_dir: Optional[str]) 
         # relative paths are relative to the data_root_dir
         path = Path(data_root_dir) / path
     return Path(path)
+
+
+class LangChainEmbeddingAdapter(EmbeddingFunction[Embeddable]):
+    def __init__(self, ef: Embeddings):
+        self.ef = ef
+
+    def __call__(self, input):
+        return self.ef.embed_documents(input)
 
 
 class IndexExampleKNNSelector(BaseExampleSelector):
@@ -115,8 +124,8 @@ class IndexExampleKNNSelector(BaseExampleSelector):
             raise ValueError(
                 "embedding_model_name must be an instance of Embeddings or a string"
             )
-        embedding_function = self.embeddings_model.embed_documents
         # create a new collection or load it if persist_path exists already
+        embedding_function = LangChainEmbeddingAdapter(self.embeddings_model)
         self.collection: Collection = chroma_client.get_or_create_collection(
             "index_collection", embedding_function=embedding_function
         )

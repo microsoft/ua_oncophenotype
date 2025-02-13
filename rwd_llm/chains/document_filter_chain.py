@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional
 
 from langchain.chains.base import Chain
-from langchain.docstore.document import Document
+from langchain_core.documents import Document
 
 
 class DocumentFilterChain(Chain):

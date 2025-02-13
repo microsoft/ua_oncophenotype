@@ -1,13 +1,8 @@
 from typing import Any, Dict, List, Optional, Type, Union
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
-from langchain.chains.loading import (
-    load_chain,
-    load_chain_from_config,
-    type_to_loader_dict,
-)
-from langchain.vectorstores.base import VectorStore
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_core.vectorstores import VectorStore
 
 from ..retrieval.index_wrapper import IndexWrapper
 from .chat_evidence_chain import ChatEvidenceChain
@@ -150,46 +145,3 @@ class IndexChain(Chain):
             llm_inputs, return_only_outputs=True, callbacks=callbacks
         )
         return {**llm_outputs, **{"docs": docs}}
-
-
-def _load_index_chain(config: dict, **kwargs: Any) -> IndexChain:
-    if "llm_chain" in config:
-        llm_chain_config = config.pop("llm_chain")
-        llm_chain = load_chain_from_config(llm_chain_config)
-    elif "llm_chain_path" in config:
-        llm_chain = load_chain(config.pop("llm_chain_path"))
-    else:
-        raise ValueError("One of `llm_chain` or `llm_chain_path` must be present.")
-    if "index" in config:
-        index = config.pop("index")
-    else:
-        raise ValueError(" index must be present.")
-    if "query" in config:
-        query = config.pop("query")
-    else:
-        query = None
-    if "k" in config:
-        k = config.pop("k")
-    else:
-        k = 5
-    if "filter_by" in config:
-        filter_by = config.pop("filter_by")
-    else:
-        filter_by = None
-    if "search_mode" in config:
-        search_mode = config.pop("search_mode")
-    else:
-        search_mode = "similarity"
-    return IndexChain(
-        llm_chain=llm_chain,
-        index=index,
-        query=query,
-        k=k,
-        search_mode=search_mode,
-        filter_by=filter_by,
-        **config,
-    )
-
-
-# hack to register the chain type
-type_to_loader_dict[INDEX_CHAIN_TYPE] = _load_index_chain

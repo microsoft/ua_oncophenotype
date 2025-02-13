@@ -16,6 +16,7 @@ legs? |--> 0 -> breathes air? |--> No  -> Fish
       |--> 6 -> makes honey? |--> No -> Ant
                              |--> Yes -> Bee
 """
+
 import logging
 import os
 
@@ -201,7 +202,7 @@ def test_memory():
         output_keys=["third_output"],
         memorized_keys=["first_output"],
     )
-    output = chain({"first_input": "some input"})
+    output = chain.invoke({"first_input": "some input"})
     # if we can get the correct third output, it means the first output was memorized
     assert output["third_output"] == "baz"
 

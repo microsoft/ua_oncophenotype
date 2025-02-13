@@ -1,8 +1,8 @@
 from typing import ClassVar, List, Optional
 
 from langchain.chains.base import Chain
-from langchain.llms.base import LLM
-from langchain.pydantic_v1 import BaseModel
+from langchain_core.language_models import LLM
+from pydantic import BaseModel
 
 
 class FakeLLM(LLM, BaseModel):
