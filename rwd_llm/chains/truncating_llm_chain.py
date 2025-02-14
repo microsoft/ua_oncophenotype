@@ -6,7 +6,7 @@ from langchain.chains.llm import LLMChain
 from langchain_core.callbacks import CallbackManagerForChainRun
 from langchain_core.prompt_values import PromptValue
 from langchain_core.prompts import BasePromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_openai.chat_models.base import BaseChatOpenAI
 from langchain_openai.llms.base import BaseOpenAI
 from langchain_text_splitters import TokenTextSplitter
 from pydantic import model_validator
@@ -131,7 +131,7 @@ class TruncatingLLMChain(LLMChain):
     @model_validator(mode="before")
     def set_truncator(cls, data: Dict[str, Any]) -> dict:
         truncator: Optional[OpenAIDocumentTruncator] = data.get("truncator")
-        llm: Union[BaseOpenAI, ChatOpenAI] = data["llm"]
+        llm: Union[BaseOpenAI, BaseChatOpenAI] = data["llm"]
         template: BasePromptTemplate = data["prompt"]
         truncation_message: Optional[str] = data.get("truncation_message")
         doc_key: str = cls._set_doc_key(data.get("doc_key"), template)
@@ -158,8 +158,8 @@ class TruncatingLLMChain(LLMChain):
             )
         return self.truncator.truncate(inputs, max_completion_tokens)
 
-    def _get_llm(self) -> Union[BaseOpenAI, ChatOpenAI]:
-        if isinstance(self.llm, (BaseOpenAI, ChatOpenAI)):
+    def _get_llm(self) -> Union[BaseOpenAI, BaseChatOpenAI]:
+        if isinstance(self.llm, (BaseOpenAI, BaseChatOpenAI)):
             return self.llm
         raise ValueError(
             f"llm must be an OpenAI or ChatOpenAI model, got {type(self.llm)}"
