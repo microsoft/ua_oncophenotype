@@ -45,7 +45,7 @@ class DatasetRunner(DatasetRunnerBase):
                 for memory in memories:
                     memory.clear()
                 args = {k: v for k, v in ob.to_dict().items() if k in chain.input_keys}
-                r = chain(args, callbacks=callbacks)
+                r = chain.invoke(args, callbacks=callbacks)
                 return ob.id, r
             except Exception as e:
                 print(f"Error for item_id {ob.id}: {e}")

@@ -82,7 +82,7 @@ def test_zero_shot_usage():
 
     # run the chain
 
-    output = chain(inputs)
+    output = chain.invoke(inputs)
     out_doc: Document = output["summary"]
     summary: Summary = out_doc.metadata["summary"]
     for fidx, finding in enumerate(summary.findings):
@@ -197,7 +197,7 @@ def test_few_shot_usage():
 
     # run the chain
 
-    output = chain(inputs)
+    output = chain.invoke(inputs)
     out_doc: Document = output["summary"]
     summary: Summary = out_doc.metadata["summary"]
     for fidx, finding in enumerate(summary.findings):

@@ -228,7 +228,7 @@ class CategoricalRoutingChain(Chain):
                 )
                 logger.info(f"Running chain node {cur_node.name}")
                 callbacks = _run_manager.get_child()
-                outputs = cur_node.chain(
+                outputs = cur_node.chain.invoke(
                     chain_inputs, callbacks=callbacks, return_only_outputs=True
                 )
             except Exception as e:

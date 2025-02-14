@@ -45,7 +45,7 @@ class IndexWrapper:
         k: int,
         filter: Optional[Dict[str, str]] = None,
         filter_document: Optional[Dict[str, str]] = None,
-        **kwargs
+        **kwargs,
     ) -> list:
         return self.query(
             index=self.index,
@@ -54,7 +54,7 @@ class IndexWrapper:
             k=k,
             filter=filter,
             filter_document=filter_document,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod
@@ -66,7 +66,7 @@ class IndexWrapper:
         fetch_k: int = 20,
         filter: Optional[Dict[str, str]] = None,
         filter_document: Optional[Dict[str, str]] = None,
-        **kwargs
+        **kwargs,
     ) -> list:
         if search_mode == "similarity":
             return index.similarity_search(
@@ -74,7 +74,7 @@ class IndexWrapper:
                 k=k,
                 filter=filter,
                 filter_document=filter_document,
-                **kwargs
+                **kwargs,
             )
         elif search_mode == "mmr":
             return index.max_marginal_relevance_search(
@@ -83,7 +83,7 @@ class IndexWrapper:
                 fetch_k=fetch_k,
                 filter=filter,
                 filter_document=filter_document,
-                **kwargs
+                **kwargs,
             )
         else:
             raise ValueError("Invalid search mode.")

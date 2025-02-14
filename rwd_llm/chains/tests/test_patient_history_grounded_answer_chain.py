@@ -89,7 +89,7 @@ def test_normal_usage():
 
     # run the chain
 
-    output = chain(inputs)
+    output = chain.invoke(inputs)
     assert output["answer"] == expected_answer.answer
     parsed_answer: PatientHistoryGroundedAnswer = output["parsed_answer"]
     assert parsed_answer.answer == expected_answer.answer
@@ -187,7 +187,7 @@ def test_jinja_template_usage():
 
     # run the chain
 
-    output = chain(inputs)
+    output = chain.invoke(inputs)
     assert output["answer"] == expected_answer.answer
     parsed_answer: PatientHistoryGroundedAnswer = output["parsed_answer"]
     assert parsed_answer.answer == expected_answer.answer

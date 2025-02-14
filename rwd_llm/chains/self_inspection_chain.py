@@ -152,7 +152,7 @@ class SelfInspectionChain(Chain):
             )
         # add the new tracer
         callbacks.add_handler(mem_tracer)
-        outputs = self.chain_to_inspect(
+        outputs = self.chain_to_inspect.invoke(
             inputs, callbacks=callbacks, return_only_outputs=True
         )
 
@@ -162,7 +162,7 @@ class SelfInspectionChain(Chain):
         }
 
         callbacks = _run_manager.get_child()
-        inspection_output = self.inspection_chain(
+        inspection_output = self.inspection_chain.invoke(
             inspection_inputs, callbacks=callbacks, return_only_outputs=True
         )
         inspection_output.update(outputs)

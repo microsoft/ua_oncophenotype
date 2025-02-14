@@ -81,7 +81,7 @@ def test_truncating_llm_chain():
     inputs = {
         "the_doc": long_doc,
     }
-    chain(inputs)
+    chain.invoke(inputs)
     # just ensure the llm was called
     assert llm.client._prompt
 
@@ -124,7 +124,7 @@ def test_truncating_llm_chain_with_message():
             "This is a somewhat long question, meant to add a bunch of extra tokens."
         ),
     }
-    chain(inputs)
+    chain.invoke(inputs)
     # we saved the prompt in the fake client
     assert llm.client._prompt.find(truncation_message) > -1
 
@@ -158,7 +158,7 @@ def test_truncating_llm_chain_using_apply():
     inputs = {
         "the_doc": long_doc,
     }
-    chain.apply([inputs])
+    chain.batch([inputs])
     # just ensure the llm was called
     assert llm.client._prompt
 

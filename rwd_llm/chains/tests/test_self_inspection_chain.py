@@ -14,7 +14,7 @@ def test_normal_usage():
     )
     inner_chain = LLMChain(prompt=prompt, llm=FakeLLM())
     wrapper_chain = SelfInspectionChain.from_chain(chain_to_inspect=inner_chain)
-    result = wrapper_chain({})
+    result = wrapper_chain.invoke({})
     print(result)
 
 

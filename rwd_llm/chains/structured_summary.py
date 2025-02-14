@@ -245,6 +245,6 @@ class StructuredDocumentSummaryChain(Chain):
         # generate structured summary
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         callbacks = _run_manager.get_child()
-        response = self.summary_chain(llm_input, callbacks=callbacks)
+        response = self.summary_chain.invoke(llm_input, callbacks=callbacks)
         output = self._create_response(inputs[self.doc_key], response)
         return output

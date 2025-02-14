@@ -15,14 +15,14 @@ def test_document_filter_chain():
     allow_list = {"my_key": ["hello", "the_val"]}
     chain = DocumentFilterChain(allow_list=allow_list)
     expected_output = {"docs": [doc1]}
-    output = chain(inputs)
+    output = chain.invoke(inputs)
     assert output == expected_output
 
     # test deny_list
     deny_list = {"my_key": ["the_val", "goodbye"]}
     chain = DocumentFilterChain(deny_list=deny_list)
     expected_output = {"docs": [doc2]}
-    output = chain(inputs)
+    output = chain.invoke(inputs)
     assert output == expected_output
 
 

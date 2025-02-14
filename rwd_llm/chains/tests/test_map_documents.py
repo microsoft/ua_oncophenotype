@@ -56,7 +56,7 @@ def test_normal_usage():
         doc_chain_doc_output_key="the_mapped_doc",
         text_only=False,
     )
-    result = map_docs({"the_docs_key": docs})
+    result = map_docs.invoke({"the_docs_key": docs})
     mapped_docs = result["the_mapped_docs"]
     for didx, doc in enumerate(mapped_docs):
         assert doc.page_content == str(didx)
@@ -85,7 +85,7 @@ def test_text_usage():
         doc_chain_doc_output_key="the_mapped_doc",
         text_only=True,
     )
-    result = map_docs({"the_docs_key": docs})
+    result = map_docs.invoke({"the_docs_key": docs})
     mapped_docs = result["the_mapped_docs"]
     for didx, doc in enumerate(mapped_docs):
         assert doc.page_content == "oof"

@@ -42,7 +42,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="No",
         has_hooves="No",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Fish"
 
     input = dict(
@@ -54,7 +54,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="Yes",
         has_hooves="No",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Human"
 
     input = dict(
@@ -66,7 +66,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="Yes",
         has_hooves="No",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Cat"
 
     input = dict(
@@ -78,7 +78,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="Yes",
         has_hooves="Yes",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Pig"
 
     input = dict(
@@ -90,7 +90,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="Yes",
         has_hooves="No",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Ant"
 
 

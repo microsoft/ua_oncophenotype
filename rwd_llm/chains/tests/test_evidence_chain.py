@@ -22,7 +22,7 @@ def test_normal_usage():
         llm_class=FakeLLM,
         llm_extra_args={"deployment_name": "gpt-35-turbo"},
     )
-    result = evidence_chain({"text": sample_doc_text})
+    result = evidence_chain.invoke({"text": sample_doc_text})
     print(result)
     assert result["evidence"] is not None
     assert result["evidence_string"] == "The answer to the question is 42."

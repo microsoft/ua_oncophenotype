@@ -141,7 +141,7 @@ class EvidenceChain(Chain):
     ) -> Dict[str, Any]:
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         callbacks = _run_manager.get_child()
-        answer_response = self.answer_chain(
+        answer_response = self.answer_chain.invoke(
             inputs, return_only_outputs=True, callbacks=callbacks
         )
 
@@ -149,7 +149,7 @@ class EvidenceChain(Chain):
 
         evidence_inputs = {**inputs, **{"answer": answer}}
         callbacks = _run_manager.get_child()
-        evidence_response = self.evidence_chain(
+        evidence_response = self.evidence_chain.invoke(
             evidence_inputs, return_only_outputs=True, callbacks=callbacks
         )
         evidence_string = evidence_response[self.evidence_chain.output_key]
