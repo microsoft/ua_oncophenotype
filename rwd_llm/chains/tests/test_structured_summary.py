@@ -64,6 +64,7 @@ def test_zero_shot_usage():
         prompt_doc_key="text",
         output_key="summary",
         truncate=False,
+        concurrent_calls=False,
     )
 
     # set up the chain
@@ -178,6 +179,7 @@ def test_few_shot_usage():
         truncate=False,
         few_shot_examples=examples,
         example_output_var="result",
+        concurrent_calls=True,
     )
 
     # set up the chain

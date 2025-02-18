@@ -118,6 +118,7 @@ class StructuredDocumentSummaryChain(Chain):
     findings_format: str = DEFAULT_FINDING_FORMAT
     summary_format: str = DEFAULT_SUMMARY_FORMAT
     output_key: str = "summary"
+    concurrent_calls: bool = True
 
     @property
     def summary_chain(self) -> LLMChain:
@@ -158,6 +159,7 @@ class StructuredDocumentSummaryChain(Chain):
         few_shot_examples: Optional[List[dict]] = None,
         example_output_var: str = "result",
         example_indent: int = 2,
+        concurrent_calls: bool = True,
     ) -> "StructuredDocumentSummaryChain":
         parser: PydanticOutputParser = DEFAULT_PARSER
         few_shot_examples = few_shot_examples or []  # ensure it's not None
@@ -181,6 +183,7 @@ class StructuredDocumentSummaryChain(Chain):
             doc_key=doc_key,
             prompt_doc_key=prompt_doc_key,
             output_key=output_key,
+            concurrent_calls=concurrent_calls,
         )
 
     def _replace_doc(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
@@ -219,7 +222,12 @@ class StructuredDocumentSummaryChain(Chain):
         """summarization is often called in parallel, let's push 'apply' down to the
         summary_chain"""
         llm_inputs = [self._replace_doc(inputs) for inputs in input_list]
-        responses = self.summary_chain.apply(llm_inputs, callbacks=callbacks)
+        if self.concurrent_calls:
+            responses = self.summary_chain.apply(llm_inputs, callbacks=callbacks)
+        else:
+            responses = [
+                self.summary_chain(inputs, callbacks=callbacks) for inputs in llm_inputs
+            ]
         outputs = [
             self._create_response(input_list[response_idx][self.doc_key], response)
             for response_idx, response in enumerate(responses)
