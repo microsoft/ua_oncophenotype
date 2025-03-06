@@ -1,13 +1,12 @@
 from typing import Any, Dict, Type, TypeVar
 
-from langchain.pydantic_v1 import BaseModel as PydanticBaseModel
-from langchain.pydantic_v1 import Field
+from pydantic import BaseModel as PydanticBaseModel
+from pydantic import ConfigDict, Field
 
 
 # global pydantic config
 class BaseModel(PydanticBaseModel):
-    class Config:
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 T = TypeVar("T", bound="BaseObject")
@@ -19,7 +18,7 @@ class BaseObject(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
     def to_dict(self, **kwargs: Any) -> Dict[str, Any]:
-        raw_dict = super().dict(**kwargs)
+        raw_dict = super().model_dump(**kwargs)
         # put metadata keys in the root of the dict
         metadata = raw_dict.pop("metadata", None) or {}
         for key, value in metadata.items():
@@ -32,7 +31,7 @@ class BaseObject(BaseModel):
     def from_dict(cls: Type[T], data: Dict[str, Any]) -> T:
         metadata = {}
         for field in list(data):  # iterate over a copy of the keys
-            if field not in cls.__fields__:
+            if field not in cls.model_fields:
                 field_val = data.pop(field)
                 metadata[field] = field_val
         data["metadata"] = metadata
@@ -59,4 +58,4 @@ class Annotation(BaseObject):
 
 
 class Label(BaseObject):
-    label: Any
+    label: Any = None

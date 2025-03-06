@@ -1,7 +1,7 @@
 from typing import Any, Dict, List
 
 from langchain.chains.base import Chain
-from langchain.pydantic_v1 import Field
+from pydantic import Field
 from rwd_llm.dtypes import BasicNoteFormatter, ClinicalNote, NoteFormatterBase
 
 

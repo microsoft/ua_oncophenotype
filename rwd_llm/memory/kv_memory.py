@@ -1,8 +1,8 @@
 import threading
 from typing import Any, Callable, Dict, List, Optional
 
-from langchain.pydantic_v1 import BaseModel, PrivateAttr
-from langchain.schema import BaseMemory
+from langchain_core.memory import BaseMemory
+from pydantic import BaseModel, PrivateAttr
 
 
 class KVMemory(BaseMemory, BaseModel):

@@ -5,7 +5,7 @@ from abc import abstractmethod
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 
-from langchain.pydantic_v1 import BaseModel
+from pydantic import BaseModel
 from rwd_llm.data_loaders.data_loaders_base import DatasetBase
 from rwd_llm.dtypes.dtypes_utils import force_to_json
 
@@ -261,7 +261,7 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
             persistence_dir = self.persistence_dir
         key_file = persistence_dir / item_id / f"{key}.json"
         obj = json.loads(key_file.read_text())
-        serialized_val = SerializedMemoryValue.parse_obj(obj)
+        serialized_val = SerializedMemoryValue.model_validate(obj)
         return self._deserialize_value(key, serialized_val.value)
 
     def _write_memory(self, item_id: str, key: str, val: Any) -> None:
@@ -276,7 +276,7 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
             item_dir.mkdir()
         key_file = item_dir / f"{key}.json"
         with open(key_file, "w") as fp:
-            json.dump(mem_val.dict(), fp)
+            json.dump(mem_val.model_dump(), fp)
 
     def _write_error(self, item_id: str, key: str, err_msg: str) -> None:
         # we use the SerializedMemoryValue class, but we just use the string directly
@@ -289,7 +289,7 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
             item_err_dir.mkdir(parents=True)
         err_file = item_err_dir / f"{key}.json"
         with open(err_file, "w") as fp:
-            json.dump(err_val.dict(), fp)
+            json.dump(err_val.model_dump(), fp)
 
     def add_memory(self, item_id: str, key: str, val: Any) -> None:
         """Add a memory to the persistent store."""

@@ -1,21 +1,16 @@
 from typing import Any, Dict, List, Optional, Type, Union
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.chains import LLMChain
 from langchain.chains.base import Chain
-from langchain.chains.loading import (
-    load_chain,
-    load_chain_from_config,
-    type_to_loader_dict,
-)
-from langchain.prompts.chat import (
+from langchain.chains.llm import LLMChain
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_core.prompts import (
     AIMessagePromptTemplate,
-    BaseMessagePromptTemplate,
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
     SystemMessagePromptTemplate,
 )
-from langchain_community.chat_models import ChatOpenAI
+from langchain_core.prompts.chat import BaseMessagePromptTemplate
+from langchain_openai import ChatOpenAI
 
 from .consistency_chain import LLMConsistencyChain
 from .evidence_chain import find_evidence
@@ -190,33 +185,3 @@ def get_chat_prompt(
         messages.append(HumanMessagePromptTemplate.from_template(evidence_prompt))
     chat_prompt = ChatPromptTemplate.from_messages(messages)
     return chat_prompt
-
-
-def _load_evidence_chain(config: dict, **kwargs: Any) -> ChatEvidenceChain:
-    if "evidence_chain" in config:
-        evidence_chain_config = config.pop("evidence_chain")
-        evidence_chain = load_chain_from_config(evidence_chain_config)
-    elif "evidence_chain_path" in config:
-        evidence_chain = load_chain(config.pop("evidence_chain_path"))
-    else:
-        raise ValueError(
-            "One of `evidence_chain` or `evidence_chain_path` must be present."
-        )
-    if "answer_chain" in config:
-        answer_chain_config = config.pop("answer_chain")
-        answer_chain = load_chain_from_config(answer_chain_config)
-    elif "answer_chain_path" in config:
-        answer_chain = load_chain(config.pop("answer_chain_path"))
-    else:
-        raise ValueError(
-            "One of `answer_chain` or `answer_chain_path` must be present."
-        )
-    return ChatEvidenceChain(
-        evidence_chain=evidence_chain,
-        answer_chain=answer_chain,
-        **config,
-    )
-
-
-# hack to register the chain type
-type_to_loader_dict[CHAT_EVIDENCE_CHAIN_TYPE] = _load_evidence_chain

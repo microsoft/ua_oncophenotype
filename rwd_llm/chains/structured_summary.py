@@ -2,13 +2,14 @@ import logging
 from typing import Any, Dict, List, Optional
 
 from langchain.callbacks.base import Callbacks
-from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
-from langchain.output_parsers import PydanticOutputParser
-from langchain.pydantic_v1 import BaseModel, Field
-from langchain.schema import BaseMemory, Document
-from langchain_community.chat_models import ChatOpenAI
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_core.documents import Document
+from langchain_core.memory import BaseMemory
+from langchain_core.output_parsers import PydanticOutputParser
+from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field
 from rwd_llm.output_parsers.pydantic_parser_with_examples import (
     PydanticOutputParserWithExamples,
 )
@@ -60,7 +61,7 @@ DEFAULT_SUMMARY_FORMAT = """
 
 
 def validate_evidence(summary: Summary, doc: Document) -> Summary:
-    summary = summary.copy()
+    summary = summary.model_copy()
     # verify the summary evidence
     for finding in summary.findings:
         parsed_evidence = []
@@ -197,7 +198,7 @@ class StructuredDocumentSummaryChain(Chain):
         self, doc: Document, response: Dict[str, Any]
     ) -> Dict[str, Any]:
         # copy, don't modify the original doc
-        doc = doc.copy()
+        doc = doc.model_copy()
         raw_response = response[self.summary_chain.output_key]
         summary: Summary = self.parser.parse(raw_response)
         summary = validate_evidence(summary, doc)
@@ -244,6 +245,6 @@ class StructuredDocumentSummaryChain(Chain):
         # generate structured summary
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         callbacks = _run_manager.get_child()
-        response = self.summary_chain(llm_input, callbacks=callbacks)
+        response = self.summary_chain.invoke(llm_input, callbacks=callbacks)
         output = self._create_response(inputs[self.doc_key], response)
         return output

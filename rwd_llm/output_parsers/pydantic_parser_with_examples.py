@@ -1,7 +1,7 @@
 from typing import List, Union
 
-from langchain.output_parsers import PydanticOutputParser
-from langchain.pydantic_v1 import BaseModel, validator
+from langchain_core.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, field_validator
 
 
 class PydanticOutputParserWithExamples(PydanticOutputParser):
@@ -9,7 +9,8 @@ class PydanticOutputParserWithExamples(PydanticOutputParser):
 
     examples: Union[List[BaseModel], BaseModel] = []
 
-    @validator("examples")
+    @field_validator("examples")
+    @classmethod
     def validate_examples(cls, examples):
         if isinstance(examples, BaseModel):
             return [examples]
@@ -24,5 +25,7 @@ class PydanticOutputParserWithExamples(PydanticOutputParser):
         if self.examples:
             instructions += "\n"
         for example in self.examples:
-            instructions += f"\nexample output:\n\n```\n{example.json(indent=2)}\n```\n"
+            instructions += (
+                f"\nexample output:\n\n```\n{example.model_dump_json(indent=2)}\n```\n"
+            )
         return instructions

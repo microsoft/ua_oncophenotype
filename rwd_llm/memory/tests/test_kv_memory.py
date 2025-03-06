@@ -19,10 +19,10 @@ def test_kv_memory_multithreading():
     )
 
     def run_prompt(inputs):
-        fake_chain_a(inputs)
+        fake_chain_a.invoke(inputs)
         time.sleep(0.1)
         # outputs from 'a' should be stored in memory
-        return fake_chain_b({})
+        return fake_chain_b.invoke({})
 
     inputs = [
         {"a": "a1"},

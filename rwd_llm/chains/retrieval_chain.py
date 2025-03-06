@@ -1,8 +1,8 @@
 from typing import Any, Dict, List, Optional
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
-from langchain.schema import Document
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_core.documents import Document
 from rwd_llm.dtypes import ClinicalNote, NoteFormatterBase
 
 from ..retrieval import NoteRetrievalBase

@@ -16,6 +16,7 @@ legs? |--> 0 -> breathes air? |--> No  -> Fish
       |--> 6 -> makes honey? |--> No -> Ant
                              |--> Yes -> Bee
 """
+
 import logging
 import os
 
@@ -41,7 +42,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="No",
         has_hooves="No",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Fish"
 
     input = dict(
@@ -53,7 +54,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="Yes",
         has_hooves="No",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Human"
 
     input = dict(
@@ -65,7 +66,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="Yes",
         has_hooves="No",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Cat"
 
     input = dict(
@@ -77,7 +78,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="Yes",
         has_hooves="Yes",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Pig"
 
     input = dict(
@@ -89,7 +90,7 @@ def _run_tests(chain: CategoricalRoutingChain):
         climbs_trees="Yes",
         has_hooves="No",
     )
-    result = chain(input)
+    result = chain.invoke(input)
     assert result["label"] == "Ant"
 
 
@@ -201,7 +202,7 @@ def test_memory():
         output_keys=["third_output"],
         memorized_keys=["first_output"],
     )
-    output = chain({"first_input": "some input"})
+    output = chain.invoke({"first_input": "some input"})
     # if we can get the correct third output, it means the first output was memorized
     assert output["third_output"] == "baz"
 

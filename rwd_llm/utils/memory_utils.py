@@ -17,5 +17,5 @@ def read_memory(
     deserializer = deserializer or PickleDeserializer()
     key_file = memory_dir / item_id / f"{key}.json"
     obj = json.loads(key_file.read_text())
-    serialized_val = SerializedMemoryValue.parse_obj(obj)
+    serialized_val = SerializedMemoryValue.model_validate(obj)
     return deserializer(serialized_val.value)

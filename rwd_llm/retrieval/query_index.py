@@ -48,7 +48,7 @@ class IndexQuery:
         fetch_k: int = 20,
         filter: Optional[Dict[str, str]] = None,
         filter_document: Optional[Dict[str, str]] = None,
-        **kwargs
+        **kwargs,
     ):
         """
         Queries the index for the given query.
@@ -72,7 +72,7 @@ class IndexQuery:
                 k=self.k,
                 filter=self.filter,
                 filter_document=self.filter_document,
-                **self.kwargs
+                **self.kwargs,
             )
         elif self.search_mode == "mmr":
             return self.index.max_marginal_relevance_search(
@@ -81,7 +81,7 @@ class IndexQuery:
                 fetch_k=self.fetch_k,
                 filter=self.filter,
                 filter_document=self.filter_document,
-                **self.kwargs
+                **self.kwargs,
             )
         else:
             raise ValueError("Invalid search mode.")
@@ -100,7 +100,7 @@ class IndexSearcher:
         fetch_k: int = 20,
         filter: Optional[Dict[str, str]] = None,
         filter_document: Optional[Dict[str, str]] = None,
-        **kwargs
+        **kwargs,
     ) -> list:
         """
         Queries the index for the given query.
@@ -118,7 +118,7 @@ class IndexSearcher:
             fetch_k=fetch_k,
             filter=filter,
             filter_document=filter_document,
-            **kwargs
+            **kwargs,
         )
 
         return query_obj.run()

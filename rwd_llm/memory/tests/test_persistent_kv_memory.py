@@ -105,7 +105,7 @@ def _get_example_summary():
         ],
     )
     val_summary = validate_evidence(summary, doc)
-    doc = doc.copy()
+    doc = doc.model_copy()
     summary_text = "the summary"
     doc.page_content = summary_text
     doc.metadata["summary"] = val_summary

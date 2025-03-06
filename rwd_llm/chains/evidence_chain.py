@@ -1,15 +1,10 @@
 from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.chains import LLMChain
 from langchain.chains.base import Chain
-from langchain.chains.loading import (
-    load_chain,
-    load_chain_from_config,
-    type_to_loader_dict,
-)
-from langchain.llms.openai import BaseOpenAI
-from langchain.pydantic_v1 import BaseModel
+from langchain.chains.llm import LLMChain
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_openai import ChatOpenAI
+from pydantic import BaseModel
 
 from .consistency_chain import LLMConsistencyChain
 from .evidence_chain_prompts import (
@@ -61,7 +56,7 @@ class EvidenceChain(Chain):
         cls,
         preamble: str,
         question: str,
-        llm_class: Type[BaseOpenAI],
+        llm_class: Type[ChatOpenAI],
         answer_mapping: Union[List[str], Dict[str, Any]],
         llm_extra_args: Optional[Dict[str, Any]] = None,
         label_key: str = "label",
@@ -146,7 +141,7 @@ class EvidenceChain(Chain):
     ) -> Dict[str, Any]:
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         callbacks = _run_manager.get_child()
-        answer_response = self.answer_chain(
+        answer_response = self.answer_chain.invoke(
             inputs, return_only_outputs=True, callbacks=callbacks
         )
 
@@ -154,7 +149,7 @@ class EvidenceChain(Chain):
 
         evidence_inputs = {**inputs, **{"answer": answer}}
         callbacks = _run_manager.get_child()
-        evidence_response = self.evidence_chain(
+        evidence_response = self.evidence_chain.invoke(
             evidence_inputs, return_only_outputs=True, callbacks=callbacks
         )
         evidence_string = evidence_response[self.evidence_chain.output_key]
@@ -198,33 +193,3 @@ def find_evidence(evidence_string: str, doc_text: str) -> Optional[Evidence]:
         begin = offset_map[norm_begin]
         end = offset_map[norm_begin + len(norm_str)]
     return Evidence(begin=begin, end=end)
-
-
-def _load_evidence_chain(config: dict, **kwargs: Any) -> EvidenceChain:
-    if "evidence_chain" in config:
-        evidence_chain_config = config.pop("evidence_chain")
-        evidence_chain = load_chain_from_config(evidence_chain_config)
-    elif "evidence_chain_path" in config:
-        evidence_chain = load_chain(config.pop("evidence_chain_path"))
-    else:
-        raise ValueError(
-            "One of `evidence_chain` or `evidence_chain_path` must be present."
-        )
-    if "answer_chain" in config:
-        answer_chain_config = config.pop("answer_chain")
-        answer_chain = load_chain_from_config(answer_chain_config)
-    elif "answer_chain_path" in config:
-        answer_chain = load_chain(config.pop("answer_chain_path"))
-    else:
-        raise ValueError(
-            "One of `answer_chain` or `answer_chain_path` must be present."
-        )
-    return EvidenceChain(
-        evidence_chain=evidence_chain,
-        answer_chain=answer_chain,
-        **config,
-    )
-
-
-# hack to register the chain type
-type_to_loader_dict[EVIDENCE_CHAIN_TYPE] = _load_evidence_chain

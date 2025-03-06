@@ -1,15 +1,10 @@
 import re
 from typing import Any, Dict, List, Optional, Type, Union
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.chains import LLMChain
 from langchain.chains.base import Chain
-from langchain.chains.loading import (
-    load_chain,
-    load_chain_from_config,
-    type_to_loader_dict,
-)
-from langchain.llms.openai import BaseOpenAI
+from langchain.chains.llm import LLMChain
+from langchain_core.callbacks import CallbackManagerForChainRun
+from langchain_openai import ChatOpenAI
 
 from .consistency_chain import LLMConsistencyChain
 from .evidence_chain import find_evidence
@@ -33,7 +28,7 @@ class EvidenceCoTChain(Chain):
         cls,
         preamble: str,
         question: str,
-        llm_class: Type[BaseOpenAI],
+        llm_class: Type[ChatOpenAI],
         answer_mapping: Union[List[str], Dict[str, Any]],
         llm_extra_args: Optional[Dict[str, Any]] = None,
         examples: List[EvidenceChainExample] = [],
@@ -133,23 +128,3 @@ class EvidenceCoTChain(Chain):
                 "evidence_string": extracted_string,
             },
         }
-
-
-def _load_evidence_chain(config: dict, **kwargs: Any) -> EvidenceCoTChain:
-    if "evidence_cot_chain" in config:
-        evidence_cot_chain_config = config.pop("evidence_cot_chain")
-        evidence_cot_chain = load_chain_from_config(evidence_cot_chain_config)
-    elif "evidence_cot_chain_path" in config:
-        evidence_cot_chain = load_chain(config.pop("evidence_cot_chain_path"))
-    else:
-        raise ValueError(
-            "One of `evidence_cot_chain` or `evidence_cot_chain_path` must be present."
-        )
-    return EvidenceCoTChain(
-        evidence_cot_chain=evidence_cot_chain,
-        **config,
-    )
-
-
-# hack to register the chain type
-type_to_loader_dict[EVIDENCE_COT_CHAIN_TYPE] = _load_evidence_chain

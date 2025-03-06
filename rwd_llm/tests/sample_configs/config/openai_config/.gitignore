@@ -1,4 +1,5 @@
 # These configs will contain secrets, so don't check them in
 *.yaml
-# ... but the sample is okay
+# ... but the samples are okay
 !sample_openai_config.yaml
+!sample_openai_identity_auth_config.yaml

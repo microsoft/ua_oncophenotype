@@ -1,7 +1,7 @@
 from typing import Optional
 
-from langchain.prompts import PromptTemplate
-from langchain.schema import BaseMemory
+from langchain_core.memory import BaseMemory
+from langchain_core.prompts import PromptTemplate
 
 from .concatenate_documents import ConcatenateDocuments
 

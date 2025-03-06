@@ -1,9 +1,9 @@
 import logging
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.chains import LLMChain
-from langchain.pydantic_v1 import Field, validator
+from langchain.chains.llm import LLMChain
+from langchain_core.callbacks import CallbackManagerForChainRun
+from pydantic import Field, field_validator
 from rwd_llm.chains.chain_utils import ERROR_LABEL
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,8 @@ class CategoricalChain(LLMChain):
     label_key: str = "label"
     stop: List[str] = Field(default_factory=list)
 
-    @validator("label_mapping")
+    @field_validator("label_mapping")
+    @classmethod
     def _normalize_label_mapping(cls, label_mapping):
         return normalize_label_mapping(label_mapping)
 

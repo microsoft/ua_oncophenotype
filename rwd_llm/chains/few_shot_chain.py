@@ -1,8 +1,8 @@
 from typing import Any, Dict, List
 
 from langchain.chains.base import Chain
-from langchain.pydantic_v1 import Field
 from langchain_core.example_selectors.base import BaseExampleSelector
+from pydantic import Field
 
 
 class FewShotChain(Chain):

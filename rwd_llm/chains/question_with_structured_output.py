@@ -1,15 +1,15 @@
 import logging
 from typing import List, Optional, Union
 
-from langchain.output_parsers import PydanticOutputParser
-from langchain.prompts.chat import (
+from langchain_core.example_selectors.base import BaseExampleSelector
+from langchain_core.messages import AIMessage
+from langchain_core.output_parsers import PydanticOutputParser
+from langchain_core.prompts import (
     AIMessagePromptTemplate,
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
     SystemMessagePromptTemplate,
 )
-from langchain.schema.messages import AIMessage
-from langchain_core.example_selectors.base import BaseExampleSelector
 from langchain_core.prompts.few_shot import FewShotChatMessagePromptTemplate
 from rwd_llm.utils import get_prompt_from_message
 from rwd_llm.utils.prompt_utils import validate_prompt_inputs
@@ -98,10 +98,10 @@ def chat_prompt_with_structured_output(
                 logger.warning(
                     "Few-shot example does not contain the expected input variables."
                 )
-            result_obj = parser.pydantic_object.parse_obj(result)
+            result_obj = parser.pydantic_object.model_validate(result)
             msg = HumanMessagePromptTemplate(prompt=question_template).format(**example)
             messages.append(msg)
-            msg = AIMessage(content=result_obj.json(indent=example_indent))
+            msg = AIMessage(content=result_obj.model_dump_json(indent=example_indent))
             messages.append(msg)
     # add final question
     found_format_variables.extend(question_template.input_variables)

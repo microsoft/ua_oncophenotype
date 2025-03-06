@@ -45,7 +45,7 @@ def test_normal_usage():
         label_mapping=labels,
     )
 
-    result = cat_chain({"text": sample_doc_text})
+    result = cat_chain.invoke({"text": sample_doc_text})
     assert result["label"] == "N1b"
     assert result["output"] == llm_output
 

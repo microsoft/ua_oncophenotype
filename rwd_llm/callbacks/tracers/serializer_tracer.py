@@ -3,8 +3,7 @@ import logging
 import os
 from typing import Optional
 
-from langchain.callbacks.tracers.base import BaseTracer
-from langchain.callbacks.tracers.schemas import Run
+from langchain_core.tracers import BaseTracer, Run
 from rwd_llm.dtypes import force_to_json
 
 logger = logging.getLogger(__name__)

@@ -18,7 +18,7 @@ def test_normal_usage():
         evidence=[PatientHistoryEvidence(note_id="0", evidence="First note.")],
         contradictory_evidence=[],
     )
-    FakeLLM.set_answers([expected_answer.json()])
+    FakeLLM.set_answers([expected_answer.model_dump_json()])
     llm = FakeLLM()
 
     # set up the chain
@@ -89,7 +89,7 @@ def test_normal_usage():
 
     # run the chain
 
-    output = chain(inputs)
+    output = chain.invoke(inputs)
     assert output["answer"] == expected_answer.answer
     parsed_answer: PatientHistoryGroundedAnswer = output["parsed_answer"]
     assert parsed_answer.answer == expected_answer.answer
@@ -109,7 +109,7 @@ def test_jinja_template_usage():
         evidence=[PatientHistoryEvidence(note_id="0", evidence="First note.")],
         contradictory_evidence=[],
     )
-    FakeLLM.set_answers([expected_answer.json()])
+    FakeLLM.set_answers([expected_answer.model_dump_json()])
     llm = FakeLLM()
 
     # set up the chain
@@ -187,7 +187,7 @@ def test_jinja_template_usage():
 
     # run the chain
 
-    output = chain(inputs)
+    output = chain.invoke(inputs)
     assert output["answer"] == expected_answer.answer
     parsed_answer: PatientHistoryGroundedAnswer = output["parsed_answer"]
     assert parsed_answer.answer == expected_answer.answer

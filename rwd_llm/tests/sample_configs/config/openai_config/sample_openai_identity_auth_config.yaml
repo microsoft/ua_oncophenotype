@@ -1,0 +1,4 @@
+# Note, you may need to run `az login` to authenticate prior to executing
+_target_: rwd_llm.llms.azure_aad_llm_utils.OpenAIAADConfig
+api_base: https://<my-openai>.openai.azure.com/
+api_version: "2024-02-15-preview"

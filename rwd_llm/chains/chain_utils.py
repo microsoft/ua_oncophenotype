@@ -1,15 +1,15 @@
 import json
 from typing import Any, Dict, List, Optional
 
-from langchain.prompts import PromptTemplate
-from langchain.prompts.chat import (
+from langchain_core.prompts import (
     AIMessagePromptTemplate,
-    BaseMessagePromptTemplate,
+    BasePromptTemplate,
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
+    PromptTemplate,
     SystemMessagePromptTemplate,
 )
-from langchain.schema.prompt_template import BasePromptTemplate
+from langchain_core.prompts.chat import BaseMessagePromptTemplate
 
 # define some useful constants
 # Unsure is a response from the LLM
