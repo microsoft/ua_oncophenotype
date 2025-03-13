@@ -1,4 +1,5 @@
 """Test serialization / deserialization of db_types"""
+
 import pytest
 
 from ..dtypes import Annotation, ClinicalNote, Document, Patient

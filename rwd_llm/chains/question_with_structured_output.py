@@ -29,6 +29,7 @@ def chat_prompt_with_structured_output(
     example_output_var: str = "result",
     example_indent: int = 2,
     jinja: bool = False,
+    use_system_prompt: bool = True,
 ) -> ChatPromptTemplate:
     """
     Create a chat prompt with structured output and optional few-shot examples.
@@ -56,13 +57,17 @@ def chat_prompt_with_structured_output(
     found_format_variables = []
     examples = examples or []
 
+    MessageTemplateClass = (
+        SystemMessagePromptTemplate if use_system_prompt else HumanMessagePromptTemplate
+    )
+
     # the JSON schema has lots of curly braces ({}), so we need to inject them as
     # partial variables
     partial_variables = {format_instructions_variable: parser.get_format_instructions()}
     if preamble is not None:
         template, _ = get_prompt_from_message(preamble, partial_variables, jinja=jinja)
         found_format_variables.extend(template.input_variables)
-        msg = SystemMessagePromptTemplate(prompt=template)
+        msg = MessageTemplateClass(prompt=template)
         messages.append(msg)
 
     if instructions is not None:
@@ -70,7 +75,7 @@ def chat_prompt_with_structured_output(
             instructions, partial_variables, jinja=jinja
         )
         found_format_variables.extend(template.input_variables)
-        msg = SystemMessagePromptTemplate(prompt=template)
+        msg = MessageTemplateClass(prompt=template)
         messages.append(msg)
 
     question_template, _ = get_prompt_from_message(

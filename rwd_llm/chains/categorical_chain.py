@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def normalize_label_mapping(
-    label_mapping: Union[List[str], Dict[str, str]]
+    label_mapping: Union[List[str], Dict[str, str]],
 ) -> Dict[str, str]:
     if isinstance(label_mapping, list):
         label_mapping = {label: label for label in label_mapping}
