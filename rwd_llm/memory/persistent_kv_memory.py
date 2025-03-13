@@ -150,6 +150,7 @@ class FileMemoryProvider(PersistentMemoryProviderBase):
         super().__init__(**kwargs)
         self.run_id: str = run_id
         self.persistence_dir: Path = Path(persistence_dir)
+        logger.info(f"Ensuring output memory directory exists '{self.persistence_dir}'")
         self.persistence_dir.mkdir(parents=True, exist_ok=True)
         self.memory_cache: Dict[str, Dict[str, JSONType]] = {}
 

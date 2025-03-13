@@ -81,5 +81,7 @@ def force_to_json(json_ob):
         return None
     else:
         logger.error(f"Cannot sanitize {json_ob} of type {type(json_ob)}.")
-        # just replace with a string representation
-        return repr(json_ob)
+        # just replace with a string representation, unless repr is very large
+        str_repr = repr(json_ob)
+        if len(str_repr) > 1000:
+            return f"not serializing {str(type(json_ob))} of size {len(str_repr)}"

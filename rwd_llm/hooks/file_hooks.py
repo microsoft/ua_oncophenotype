@@ -37,3 +37,17 @@ class EnsureEmptyDirectoryHook:
         logger.info(f"Ensuring {self.dir} is created and empty")
         shutil.rmtree(self.dir, ignore_errors=True)
         self.dir.mkdir(parents=True, exist_ok=True)
+
+
+@dataclass
+class EnsureDirectoryExistsHook:
+    """Hook to ensure a directory exists (create if it doesn't)"""
+
+    dir: Path
+
+    def __post_init__(self):
+        self.dir = Path(self.dir)
+
+    def __call__(self):
+        logger.info(f"Ensuring {self.dir} exists")
+        self.dir.mkdir(parents=True, exist_ok=True)
