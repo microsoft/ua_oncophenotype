@@ -7,6 +7,7 @@ import tqdm
 from langchain.chains.base import Chain
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.memory import BaseMemory
+from langchain_core.runnables.config import RunnableConfig
 from rwd_llm.data_loaders import DatasetBase
 from rwd_llm.dtypes.dtypes import BaseObject
 
@@ -45,7 +46,8 @@ class DatasetRunner(DatasetRunnerBase):
                 for memory in memories:
                     memory.clear()
                 args = {k: v for k, v in ob.to_dict().items() if k in chain.input_keys}
-                r = chain.invoke(args, callbacks=callbacks)
+                config = RunnableConfig(callbacks=callbacks)
+                r = chain.invoke(args, config=config)
                 return ob.id, r
             except Exception as e:
                 print(f"Error for item_id {ob.id}: {e}")

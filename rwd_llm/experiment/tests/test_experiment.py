@@ -1,5 +1,7 @@
 import os
 
+import pytest
+from langchain_core.tracers import BaseTracer
 from rwd_llm.chains.mapping_chain import MappingChain
 from rwd_llm.data_loaders import (
     DataframeClinicalNoteDataLoader,
@@ -46,6 +48,58 @@ def test_note_experiment():
         evaluation=evaluation,
     )
     experiment.run()
+
+
+class ExpectedException(BaseException):
+    """Inheret directly from BaseException to avoid being caught by normal handlers"""
+
+
+class ExpectedExceptionCallback(BaseTracer):
+    def __init__(self):
+        super().__init__()
+
+    def _persist_run(self, run):
+        raise ExpectedException("Expected exception")
+
+
+def test_experiment_callback():
+    loader = DataframeClinicalNoteDataLoader(
+        dataframe_path="sample_notes.tsv",
+        text_column="text",
+        date_column="date",
+        patient_id_column="patient_id",
+        note_id_column="note_id",
+        type_column="type",
+        note_type="Document.ClinicalNote",
+        data_root_dir=SAMPLE_DATA_DIR,
+        label_column="color",
+    )
+    # mapping from note id to label
+    mapping = {
+        "note_001": "red",
+        "note_002": "red",
+        "note_003": "red",
+        "note_004": "yellow",
+        "note_005": "yellow",
+        "note_006": "yellow",
+        "note_007": "green",
+    }
+    fake_chain = MappingChain(mapping=mapping, input_key="id")
+    runner = DatasetRunner()
+    evaluation = ClassificationEvaluation()
+
+    callbacks = [ExpectedExceptionCallback()]
+
+    experiment = Experiment(
+        dataset=loader.load(),
+        chain=fake_chain,
+        data_runner=runner,
+        evaluation=evaluation,
+        callbacks=callbacks,
+    )
+
+    with pytest.raises(ExpectedException):
+        experiment.run()
 
 
 def test_patient_experiment():
