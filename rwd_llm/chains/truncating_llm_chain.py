@@ -20,6 +20,7 @@ OPENAI_MODEL_TOKEN_MAPPING = {
     "gpt-4-32k": 32768,
     "gpt-4-32k-0314": 32768,
     "gpt-4o": 128_000,
+    "gpt-4o-mini": 128_000,
     "gpt-35-turbo": 4096,
     "gpt-35-turbo-16k": 16384,
     "gpt-3.5-turbo": 4096,
