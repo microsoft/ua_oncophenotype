@@ -14,6 +14,7 @@ from rwd_llm.output_parsers.pydantic_parser_with_examples import (
     PydanticOutputParserWithExamples,
 )
 
+from ..utils.chain_utils import get_child_config
 from .evidence_chain import find_evidence
 from .question_with_structured_output import chat_prompt_with_structured_output
 from .truncating_llm_chain import TruncatingLLMChain
@@ -243,8 +244,7 @@ class StructuredDocumentSummaryChain(Chain):
         llm_input = self._replace_doc(inputs)
 
         # generate structured summary
-        _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
-        callbacks = _run_manager.get_child()
-        response = self.summary_chain.invoke(llm_input, callbacks=callbacks)
+        config = get_child_config(run_manager)
+        response = self.summary_chain.invoke(llm_input, config=config)
         output = self._create_response(inputs[self.doc_key], response)
         return output

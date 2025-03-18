@@ -4,14 +4,12 @@ from uuid import UUID
 
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
-from langchain_core.callbacks import (
-    BaseCallbackHandler,
-    BaseCallbackManager,
-    CallbackManagerForChainRun,
-)
+from langchain_core.callbacks import BaseCallbackHandler, CallbackManagerForChainRun
 from langchain_core.messages import BaseMessage
 from langchain_core.outputs import LLMResult
 from langchain_core.prompts import PromptTemplate
+
+from ..utils.chain_utils import get_child_config
 
 logger = logging.getLogger(__name__)
 
@@ -143,17 +141,11 @@ class SelfInspectionChain(Chain):
         inputs: Dict[str, Any],
         run_manager: Optional[CallbackManagerForChainRun] = None,
     ) -> Dict[str, str]:
-        _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         mem_tracer = LLMCallMemorizer()
-        callbacks = _run_manager.get_child()
-        if not isinstance(callbacks, BaseCallbackManager):
-            raise ValueError(
-                f"Expected a CallbackManager, but got {type(_run_manager)}"
-            )
         # add the new tracer
-        callbacks.add_handler(mem_tracer)
+        config = get_child_config(run_manager, extra_callbacks=mem_tracer)
         outputs = self.chain_to_inspect.invoke(
-            inputs, callbacks=callbacks, return_only_outputs=True
+            inputs, config=config, return_only_outputs=True
         )
 
         inspection_inputs = {
@@ -161,9 +153,9 @@ class SelfInspectionChain(Chain):
             self.inspection_chain_response_key: mem_tracer._response,
         }
 
-        callbacks = _run_manager.get_child()
+        config = get_child_config(run_manager, extra_callbacks=mem_tracer)
         inspection_output = self.inspection_chain.invoke(
-            inspection_inputs, callbacks=callbacks, return_only_outputs=True
+            inspection_inputs, config=config, return_only_outputs=True
         )
         inspection_output.update(outputs)
         print(inspection_output)

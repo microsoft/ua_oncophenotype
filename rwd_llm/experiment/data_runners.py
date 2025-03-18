@@ -2,12 +2,13 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
+from uuid import uuid4
 
 import tqdm
 from langchain.chains.base import Chain
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.memory import BaseMemory
-from langchain_core.runnables.config import RunnableConfig
+from langchain_core.runnables import RunnableConfig
 from rwd_llm.data_loaders import DatasetBase
 from rwd_llm.dtypes.dtypes import BaseObject
 
@@ -46,8 +47,11 @@ class DatasetRunner(DatasetRunnerBase):
                 for memory in memories:
                     memory.clear()
                 args = {k: v for k, v in ob.to_dict().items() if k in chain.input_keys}
-                config = RunnableConfig(callbacks=callbacks)
-                r = chain.invoke(args, config=config)
+                config = RunnableConfig(callbacks=callbacks, run_id=uuid4())
+                r = chain.invoke(
+                    args,
+                    config=config,
+                )
                 return ob.id, r
             except Exception as e:
                 print(f"Error for item_id {ob.id}: {e}")

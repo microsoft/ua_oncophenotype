@@ -54,12 +54,19 @@ class ExpectedException(BaseException):
     """Inheret directly from BaseException to avoid being caught by normal handlers"""
 
 
+class UnExpectedException(BaseException):
+    """Inheret directly from BaseException to avoid being caught by normal handlers"""
+
+
 class ExpectedExceptionCallback(BaseTracer):
     def __init__(self):
         super().__init__()
 
+    def on_chain_start(self, *args, **kwargs):
+        return super().on_chain_start(*args, **kwargs)
+
     def _persist_run(self, run):
-        raise ExpectedException("Expected exception")
+        raise ExpectedException
 
 
 def test_experiment_callback():

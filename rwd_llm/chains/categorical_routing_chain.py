@@ -7,6 +7,7 @@ from langchain_core.callbacks import CallbackManagerForChainRun
 from pydantic import BaseModel, field_validator, model_validator
 
 from ..memory import EphemeralMemoryProvider, PersistentMemoryProviderBase
+from ..utils.chain_utils import get_child_config
 
 logger = logging.getLogger(__name__)
 
@@ -198,7 +199,6 @@ class CategoricalRoutingChain(Chain):
         inputs: Dict[str, Any],
         run_manager: Optional[CallbackManagerForChainRun] = None,
     ) -> Dict[str, str]:
-        _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         cur_node = self.root
 
         if self.item_id_key:
@@ -227,9 +227,9 @@ class CategoricalRoutingChain(Chain):
                     cur_node, item_id=item_id, inputs=inputs, orig_inputs=orig_inputs
                 )
                 logger.info(f"Running chain node {cur_node.name}")
-                callbacks = _run_manager.get_child()
+                config = get_child_config(run_manager)
                 outputs = cur_node.chain.invoke(
-                    chain_inputs, callbacks=callbacks, return_only_outputs=True
+                    chain_inputs, config=config, return_only_outputs=True
                 )
             except Exception as e:
                 for key in keys_to_save:

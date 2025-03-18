@@ -6,6 +6,7 @@ from langchain_core.callbacks import CallbackManagerForChainRun
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
 
+from ..utils.chain_utils import get_child_config
 from .consistency_chain import LLMConsistencyChain
 from .evidence_chain_prompts import (
     ANSWER_STOP,
@@ -139,18 +140,17 @@ class EvidenceChain(Chain):
         inputs: Dict[str, str],
         run_manager: Optional[CallbackManagerForChainRun] = None,
     ) -> Dict[str, Any]:
-        _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
-        callbacks = _run_manager.get_child()
+        config = get_child_config(run_manager)
         answer_response = self.answer_chain.invoke(
-            inputs, return_only_outputs=True, callbacks=callbacks
+            inputs, config=config, return_only_outputs=True
         )
 
         answer = answer_response[self.answer_chain.output_key]
 
         evidence_inputs = {**inputs, **{"answer": answer}}
-        callbacks = _run_manager.get_child()
+        config = get_child_config(run_manager)
         evidence_response = self.evidence_chain.invoke(
-            evidence_inputs, return_only_outputs=True, callbacks=callbacks
+            evidence_inputs, config=config, return_only_outputs=True
         )
         evidence_string = evidence_response[self.evidence_chain.output_key]
         try:
