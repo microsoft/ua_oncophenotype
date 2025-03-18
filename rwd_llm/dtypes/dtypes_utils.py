@@ -4,6 +4,12 @@ from typing import List
 from uuid import UUID
 
 from pydantic import BaseModel
+
+try:
+    from pydantic.v1 import BaseModel as BaseModelV1
+except ImportError:
+    BaseModelV1 = None
+
 from rwd_llm.dtypes.dtypes import BaseObject, ClinicalNote
 
 logger = logging.getLogger(__name__)
@@ -75,6 +81,8 @@ def force_to_json(json_ob):
         return str(json_ob)
     elif isinstance(json_ob, BaseObject):
         return force_to_json(json_ob.to_dict())
+    elif BaseModelV1 is not None and isinstance(json_ob, BaseModelV1):
+        return force_to_json(json_ob.dict())
     elif isinstance(json_ob, BaseModel):
         return force_to_json(json_ob.model_dump())
     elif json_ob is None:

@@ -2,7 +2,6 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
-from uuid import uuid4
 
 import tqdm
 from langchain.chains.base import Chain
@@ -47,7 +46,7 @@ class DatasetRunner(DatasetRunnerBase):
                 for memory in memories:
                     memory.clear()
                 args = {k: v for k, v in ob.to_dict().items() if k in chain.input_keys}
-                config = RunnableConfig(callbacks=callbacks, run_id=uuid4())
+                config = RunnableConfig(callbacks=callbacks)
                 r = chain.invoke(
                     args,
                     config=config,
