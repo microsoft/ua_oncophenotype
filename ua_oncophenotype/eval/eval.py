@@ -1,8 +1,8 @@
 import logging
 from typing import Any, Dict
 
-from ua_oncophenotype.chains.chain_utils import ERROR_LABEL
 from sklearn.metrics import classification_report
+from ua_oncophenotype.chains.chain_utils import ERROR_LABEL
 
 from ..data_loaders import DatasetBase
 

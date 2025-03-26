@@ -5,9 +5,7 @@ from typing import Union
 
 import hydra
 import hydra.core
-from omegaconf import OmegaConf
-from hydra.utils import instantiate
-from omegaconf import DictConfig, ListConfig
+from omegaconf import DictConfig, ListConfig, OmegaConf
 from ua_oncophenotype.experiment_config import parse_config
 
 from .utils import get_by_path

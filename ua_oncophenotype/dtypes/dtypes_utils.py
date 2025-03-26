@@ -64,9 +64,9 @@ class NoteCombiner:
 
 def force_to_json(json_ob):
     """
-    Make sure json_ob is json-serializable, including ua_oncophenotype BaseObject subclasses. If
-    something can't be serialized as json, just fall back to representing it as a 'repr'
-    string.
+    Make sure json_ob is json-serializable, including ua_oncophenotype BaseObject
+    subclasses. If something can't be serialized as json, just fall back to representing
+    it as a 'repr' string.
     """
 
     if isinstance(json_ob, (str, float, int, bool)):

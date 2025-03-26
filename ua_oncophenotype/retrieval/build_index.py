@@ -7,13 +7,13 @@ from langchain_core.embeddings import Embeddings
 from langchain_openai import AzureOpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from openai import RateLimitError
-from ua_oncophenotype.data_loaders.data_loaders_base import DatasetBase
-from ua_oncophenotype.dtypes.dtypes import BaseObject, ClinicalNote, Patient
 from tenacity import retry
 from tenacity.retry import retry_if_exception_type
 from tenacity.stop import stop_after_attempt
 from tenacity.wait import wait_random_exponential
 from tqdm import tqdm
+from ua_oncophenotype.data_loaders.data_loaders_base import DatasetBase
+from ua_oncophenotype.dtypes.dtypes import BaseObject, ClinicalNote, Patient
 
 from .chroma import Chroma
 

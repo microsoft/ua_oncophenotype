@@ -19,13 +19,11 @@ class FakeOpenAILLM(FakeLLM):
 
 
 def test_zero_shot_usage():
-    input_text = textwrap.dedent(
-        """
+    input_text = textwrap.dedent("""
     This is a note to summarize.  It has a few findings.  One is that the Patient has a
     broken leg.  Another is that the Patient has a broken arm.  Also, the Patient is
     allergic to peanuts.
-    """
-    )
+    """)
     findings = [
         {
             "finding": "broken leg",
@@ -100,13 +98,11 @@ def test_zero_shot_usage():
 
 
 def test_few_shot_usage():
-    input_text = textwrap.dedent(
-        """
+    input_text = textwrap.dedent("""
     This is a note to summarize.  It has a few findings.  One is that the Patient has a
     broken leg.  Another is that the Patient has a broken arm.  Also, the Patient is
     allergic to peanuts.
-    """
-    )
+    """)
     findings = [
         {
             "finding": "broken leg",
