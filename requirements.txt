@@ -171,7 +171,7 @@ smmap==5.0.2
 sniffio==1.3.0
 SQLAlchemy==2.0.37
 sqlparse==0.5.3
-starlette==0.38.2
+starlette==0.40.0
 sympy==1.13.3
 tenacity==9.0.0
 threadpoolctl==3.6.0
