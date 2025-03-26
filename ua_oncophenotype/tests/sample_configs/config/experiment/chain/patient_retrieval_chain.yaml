@@ -1,0 +1,21 @@
+# Chain that retrieves notes based on patient ID, formats them as a single string, and
+# then calls the LLM for categorical classification
+defaults:
+  # Insert /config/experiment/chain/evidence_chain as the 'classifier' key in this
+  # config.
+  - /config/experiment/chain@classifier: evidence_chain
+
+_target_: ua_oncophenotype.chains.RetrievalAndClassificationChain
+retriever:
+  _target_: ua_oncophenotype.retrieval.NoteRetrievalSimple
+  dataset:
+    # assume that the component registry has been populated with a 'note_dataset'
+    _target_: ua_oncophenotype.experiment_config.ComponentRegistry.get
+    name: "note_dataset"
+note_types:
+  # This is the fake 'note type' for the sample dataset. In reality could be something
+  # like ImagingReport.
+  - note
+note_formatter:
+  _target_: ua_oncophenotype.dtypes.BasicNoteFormatter
+  

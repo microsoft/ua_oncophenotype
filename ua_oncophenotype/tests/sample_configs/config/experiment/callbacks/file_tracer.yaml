@@ -1,0 +1,5 @@
+_target_: ua_oncophenotype.callbacks.tracers.SerializerTracer
+run_id_input_key: id
+# /traces gets appended to this
+out_dir: ${config.output_dir}
+allow_overwrite: True

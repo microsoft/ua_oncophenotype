@@ -118,7 +118,7 @@ if __name__ == "__main__":
     default_checks = ["isort", "autoflake", "black", "flake8"]
 
     default_dirs = [
-        PYTHON_DIR / "rwd_llm",
+        PYTHON_DIR / "ua_oncophenotype",
     ]
 
     parser = argparse.ArgumentParser()

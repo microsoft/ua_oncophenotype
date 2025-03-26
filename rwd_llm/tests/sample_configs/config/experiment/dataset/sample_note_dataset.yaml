@@ -1,7 +1,0 @@
-_target_: rwd_llm.data_loaders.DataframeClinicalNoteDataLoader.instantiate_and_load
-dataframe_path: sample_data/sample_notes.tsv
-text_column: text
-date_column: date
-patient_id_column: patient_id
-type_column: type
-note_id_column: note_id

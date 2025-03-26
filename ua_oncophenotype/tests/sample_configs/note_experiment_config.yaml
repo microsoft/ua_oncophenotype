@@ -1,0 +1,14 @@
+defaults:
+  - config/experiment/chain: evidence_chain
+  - config/experiment/dataset: sample_note_dataset
+
+config:
+  _target_: ua_oncophenotype.experiment_config.ExperimentConfig
+  experiment:
+    _target_: ua_oncophenotype.experiment.Experiment
+    data_runner:
+      _target_: ua_oncophenotype.experiment.data_runners.DatasetRunner
+      n_threads: 1
+    evaluation:
+      _target_: ua_oncophenotype.eval.ClassificationEvaluation
+  output_dir: "experiment_output"

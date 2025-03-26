@@ -1,0 +1,8 @@
+# This references a small sample dataset that is part of this repo.  We expect
+# data_root_dir to be set to the absolute path of the directory containing the
+# sample_data folder (ua_oncophenotype/tests). This can be something like
+# `+dataset.data_root_dir=/home/username/ua_oncophenotype/tests`.
+_target_: ua_oncophenotype.data_loaders.DataframePatientDataLoader.instantiate_and_load
+dataframe_path: sample_data/sample_patient_labels.tsv
+patient_id_column: patient_id
+label_column: color_label

@@ -1,8 +1,0 @@
-# This references a small sample dataset that is part of this repo.  We expect
-# data_root_dir to be set to the absolute path of the directory containing the
-# sample_data folder (rwd_llm/tests). This can be something like
-# `+dataset.data_root_dir=/home/username/rwd_llm/tests`.
-_target_: rwd_llm.data_loaders.DataframePatientDataLoader.instantiate_and_load
-dataframe_path: sample_data/sample_patient_labels.tsv
-patient_id_column: patient_id
-label_column: color_label

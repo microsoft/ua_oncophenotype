@@ -1,0 +1,8 @@
+_target_: ua_oncophenotype.data_loaders.DataframePatientDataLoader.instantiate_and_load
+dataframe_path: rwepdssa/data/llm_datasets/mimic_phenotype/mimic_eval_small.csv
+text_column: TEXT
+date_column: CHARTDATE
+patient_id_column: SUBJECT_ID
+type_column: CATEGORY
+note_id_column: ROW_ID
+label_column: ALCOHOL.ABUSE

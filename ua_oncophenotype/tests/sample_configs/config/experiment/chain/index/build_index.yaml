@@ -1,0 +1,9 @@
+_target_: "ua_oncophenotype.retrieval.retrieval_utils.build_and_get_index"
+dataset: 
+  # assume that the component registry has been populated with a 'note_dataset'
+  _target_: ua_oncophenotype.experiment_config.ComponentRegistry.get
+  name: "note_dataset"
+embedding_model_name: "text-embedding-ada-002"
+chunk_size: 1000
+chunk_overlap: 100
+index_output_dir: "./tmp/index"

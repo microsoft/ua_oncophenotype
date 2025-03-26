@@ -1,0 +1,3 @@
+_target_: "ua_oncophenotype.retrieval.retrieval_utils.get_existing_index"
+index_path: "./tmp/index"
+embedding_name: "text-embedding-ada-002"
