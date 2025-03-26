@@ -17,12 +17,10 @@ class DatasetBase(BaseModel):
         return len(self.items)
 
     @overload
-    def __getitem__(self, key: int) -> BaseObject:
-        ...
+    def __getitem__(self, key: int) -> BaseObject: ...
 
     @overload
-    def __getitem__(self, key: slice) -> "DatasetBase":
-        ...
+    def __getitem__(self, key: slice) -> "DatasetBase": ...
 
     def __getitem__(self, key: Union[int, slice]) -> Union[BaseObject, "DatasetBase"]:
         if isinstance(key, slice):
