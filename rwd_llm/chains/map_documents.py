@@ -24,6 +24,8 @@ class MapDocumentsChain(Chain):
     property."""
     text_only: bool = False
     """If True, will only pass the text of the document to the chain."""
+    concurrent_calls: bool = True
+    """If False, make sequential calls"""
 
     @model_validator(mode="before")
     def find_doc_input_key(cls, data: Dict[str, Any]) -> dict:
@@ -96,11 +98,18 @@ class MapDocumentsChain(Chain):
             doc_chain_inputs = [{self.doc_input_key: doc} for doc in docs]
 
         callbacks = _run_manager.get_child()
-        results = self.doc_chain.batch(
-            # FYI - this is parallelized and so it is fast.
-            doc_chain_inputs,
-            callbacks=callbacks,
-        )
+        if self.concurrent_calls:
+            results = self.doc_chain.batch(
+                # FYI - this is parallelized and so it is fast.
+                doc_chain_inputs,
+                callbacks=callbacks,
+            )
+        else:
+            # sequential calls
+            results = [
+                self.doc_chain(inputs, callbacks=callbacks)
+                for inputs in doc_chain_inputs
+            ]
         if self.text_only:
             out_docs = []
             for doc_idx, result in enumerate(results):

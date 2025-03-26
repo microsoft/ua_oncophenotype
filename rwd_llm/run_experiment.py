@@ -1,9 +1,12 @@
 import logging
+import logging.config
 import os
 from typing import Union
 
 import hydra
 import hydra.core
+from omegaconf import OmegaConf
+from hydra.utils import instantiate
 from omegaconf import DictConfig, ListConfig
 from rwd_llm.experiment_config import parse_config
 
@@ -43,7 +46,11 @@ def my_app(cfg: DictConfig) -> None:
     # tell hydra to raise exceptions instead of catching and reporting
     os.environ["HYDRA_FULL_ERROR"] = "1"
 
-    logging.basicConfig(level=logging.DEBUG)
+    if "logging" in cfg:
+        logging_config: dict = OmegaConf.to_container(cfg.logging)
+        logging.config.dictConfig(logging_config)
+    else:
+        logging.basicConfig(level=logging.DEBUG)
 
     if "print" in cfg:
         # standard values meaning 'just print the config'
