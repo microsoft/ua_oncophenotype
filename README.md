@@ -3,7 +3,7 @@
 
 1. Create the environment
     ```sh
-    conda create -f ua_oncophenotype_env
+    conda create -f ua_oncophenotype_env.yml
     conda activate ua_oncophenotype_env
     # the environment contains all of the dependencies, but we'll install the package in 
     # editable mode
