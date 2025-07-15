@@ -1,5 +1,5 @@
 aiohappyeyeballs==2.4.4
-aiohttp==3.11.10
+aiohttp==3.12.14
 aiosignal==1.2.0
 alembic==1.15.1
 annotated-types==0.6.0
