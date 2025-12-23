@@ -83,7 +83,7 @@ kiwisolver==1.4.8
 kubernetes==32.0.1
 langchain==0.3.18
 langchain-community==0.3.17
-langchain-core==0.3.49
+langchain-core==0.3.81
 langchain-openai==0.3.11
 langchain-text-splitters==0.3.7
 langsmith==0.1.147
